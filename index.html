@@ -3,206 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borrow a Book | Community Edition</title>
+    <title>Borrow a Book</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- Supabase Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         body { font-family: 'Lexend Mega', sans-serif; background-color: #FFDE59; }
+        .neo-border { border: 4px solid black; }
         .neo-shadow { box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); }
-        .neo-shadow-sm { box-shadow: 4px 4px 0px 0px rgba(0,0,0,1); }
-        .neo-shadow-active:active { box-shadow: 0px 0px 0px 0px rgba(0,0,0,1); transform: translate(4px, 4px); }
-        .custom-scrollbar::-webkit-scrollbar { width: 12px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #000; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #fff; border: 3px solid #000; }
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="p-4 md:p-8" x-data="app()" x-init="init()">
+<body x-data="app()">
 
-    <!-- LOGIN SCREEN -->
+    <!-- LOGIN BOX (Always visible first) -->
     <template x-if="!isLoggedIn">
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
-            <div class="bg-[#FF914D] border-4 border-black p-8 max-w-md w-full neo-shadow">
-                <h1 class="text-4xl font-black mb-6 uppercase italic tracking-tighter">Borrow a Book!</h1>
-                <label class="block text-xs font-bold mb-1 uppercase">Your Name</label>
-                <input type="text" x-model="username" placeholder="BookWorm" class="w-full border-4 border-black p-3 mb-6 neo-shadow-sm focus:outline-none text-xl">
-                <div class="grid grid-cols-4 gap-4 mb-8">
-                    <template x-for="av in avatars">
-                        <button @click="selectedAvatar = av" :class="selectedAvatar === av ? 'bg-white' : 'bg-yellow-300'" class="text-4xl p-2 border-4 border-black neo-shadow-sm neo-shadow-active"><span x-text="av"></span></button>
-                    </template>
-                </div>
-                <button @click="login()" class="w-full bg-[#8C52FF] text-white border-4 border-black p-4 text-2xl font-black uppercase neo-shadow neo-shadow-active">Enter →</button>
+        <div class="fixed inset-0 flex items-center justify-center bg-[#FFDE59] z-[100] p-4">
+            <div class="bg-[#FF914D] neo-border p-8 max-w-md w-full neo-shadow">
+                <h1 class="text-4xl font-black mb-6 uppercase italic">Borrow a Book</h1>
+                <input type="text" x-model="username" placeholder="Username" class="w-full neo-border p-3 mb-6 focus:outline-none text-xl font-bold">
+                <button @click="login()" class="w-full bg-[#8C52FF] text-white neo-border p-4 text-2xl font-black uppercase">Enter Site →</button>
+                <p class="text-center mt-4 text-xs font-bold">If this screen stays here, check the console (F12)</p>
             </div>
         </div>
     </template>
 
-    <!-- MAIN DASHBOARD -->
-    <div x-show="isLoggedIn" x-cloak class="max-w-6xl mx-auto">
-        <header class="flex flex-wrap justify-between items-center bg-[#5CE1E6] border-4 border-black p-6 mb-8 neo-shadow">
-            <div class="flex items-center gap-4">
-                <div class="bg-white border-4 border-black w-14 h-14 flex items-center justify-center text-3xl neo-shadow-sm" x-text="selectedAvatar"></div>
-                <h2 class="text-xl font-black uppercase" x-text="username"></h2>
-            </div>
-            <h1 class="hidden md:block text-2xl font-black italic">GLOBAL COMMUNITY SHELF</h1>
-            <button @click="isLoggedIn = false" class="bg-red-400 border-4 border-black px-4 py-2 font-bold neo-shadow-sm neo-shadow-active uppercase">Logout</button>
+    <!-- DASHBOARD (Hidden until login) -->
+    <div x-show="isLoggedIn" x-cloak class="p-4 md:p-8 max-w-6xl mx-auto">
+        <header class="flex justify-between items-center bg-[#5CE1E6] neo-border p-6 mb-8 neo-shadow">
+            <h2 class="text-xl font-black uppercase" x-text="'Hi, ' + username"></h2>
+            <button @click="isLoggedIn = false" class="bg-red-400 neo-border px-4 py-2 font-bold">LOGOUT</button>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="space-y-8">
-                <section class="bg-[#FF66C4] border-4 border-black p-6 neo-shadow">
-                    <h3 class="text-xl font-black uppercase mb-4">Add a Book</h3>
-                    <div class="space-y-3">
-                        <input type="text" x-model="newBook.title" placeholder="Book Title" class="w-full border-4 border-black p-2 font-bold focus:outline-none">
-                        <input type="text" x-model="newBook.author" placeholder="Author" class="w-full border-4 border-black p-2 font-bold focus:outline-none">
-                        <input type="text" x-model="newBook.pdfUrl" placeholder="PDF Link (Optional)" class="w-full border-4 border-black p-2 font-bold focus:outline-none">
-                        <button @click="addBook()" class="w-full bg-black text-white p-3 font-black uppercase neo-shadow-active">Add Book +</button>
-                    </div>
-                </section>
-
-                <section class="bg-[#7ED957] border-4 border-black p-6 neo-shadow h-[400px] flex flex-col">
-                    <h3 class="text-xl font-black uppercase mb-4 text-black">Chat Wall</h3>
-                    <div id="chat" class="flex-grow overflow-y-auto custom-scrollbar border-4 border-black bg-white p-4 mb-4 space-y-4">
-                        <template x-for="m in messages">
-                            <div class="flex gap-2">
-                                <span class="text-xl" x-text="m.avatar"></span>
-                                <div class="bg-gray-100 border-2 border-black p-2 text-xs">
-                                    <b x-text="m.username"></b>: <span x-text="m.content"></span>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                    <div class="flex gap-2">
-                        <input @keyup.enter="postMessage()" x-model="chatInput" placeholder="Write..." class="flex-grow border-4 border-black p-2 font-bold text-xs focus:outline-none">
-                        <button @click="postMessage()" class="bg-black text-white px-4 border-4 border-black font-black uppercase">Post</button>
-                    </div>
-                </section>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- CHAT -->
+            <div class="bg-[#7ED957] neo-border p-6 neo-shadow h-[400px] flex flex-col">
+                <h3 class="font-black mb-4 uppercase">Chat</h3>
+                <div class="flex-grow overflow-y-auto neo-border bg-white p-4 mb-4 space-y-2">
+                    <template x-for="m in messages">
+                        <div class="text-xs bg-gray-100 p-2 neo-border">
+                            <b x-text="m.username"></b>: <span x-text="m.content"></span>
+                        </div>
+                    </template>
+                </div>
+                <div class="flex gap-2">
+                    <input @keyup.enter="postMessage()" x-model="chatInput" class="flex-grow neo-border p-2 text-xs">
+                    <button @click="postMessage()" class="bg-black text-white px-4 neo-border font-black">SEND</button>
+                </div>
             </div>
 
-            <div class="lg:col-span-2">
-                <div class="bg-white border-4 border-black p-6 neo-shadow min-h-[500px]">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-3xl font-black uppercase italic">The Bookshelf</h3>
-                        <button @click="fetchBooks()" class="bg-blue-400 border-2 border-black px-2 py-1 text-[10px] font-black uppercase neo-shadow-active">Refresh</button>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <template x-for="book in books" :key="book.id">
-                            <div class="border-4 border-black p-4 flex flex-col justify-between h-48 bg-white neo-shadow-sm">
-                                <div>
-                                    <h4 class="text-lg font-black uppercase leading-tight" x-text="book.title"></h4>
-                                    <p class="text-xs font-bold text-gray-500" x-text="'by ' + book.author"></p>
-                                </div>
-                                <button @click="handleAction(book)" 
-                                        :class="book.pdf_url ? 'bg-cyan-400' : 'bg-orange-400'"
-                                        class="w-full border-4 border-black p-2 font-black uppercase neo-shadow-active text-sm">
-                                    <span x-text="book.pdf_url ? '📖 Read PDF': 'Borrow Book'"></span>
-                                </button>
+            <!-- SHELF -->
+            <div class="bg-white neo-border p-6 neo-shadow">
+                <h3 class="font-black mb-4 uppercase">Bookshelf</h3>
+                <div class="space-y-4">
+                    <template x-for="book in books">
+                        <div class="p-4 neo-border bg-yellow-50 flex justify-between items-center">
+                            <div>
+                                <h4 class="font-black" x-text="book.title"></h4>
+                                <p class="text-[10px]" x-text="book.author"></p>
                             </div>
-                        </template>
-                    </div>
+                            <button @click="if(book.pdf_url) window.open(book.pdf_url)" class="bg-cyan-400 neo-border p-2 text-[10px] font-black">READ</button>
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Use unique names to avoid browser confusion
-        const SB_URL = 'https://xeefrgjdopybjfofsnts.supabase.co';
-        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZWZyZ2pkb3B5Ympmb2ZzbnRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMzEyNjgsImV4cCI6MjA5NjkwNzI2OH0.9mpDByrFmBOn9MXJkRxb55QbK-A-tBAoMDg9chVbpGk';
-        
-        // Initialize the client
-        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-
         function app() {
             return {
                 isLoggedIn: false,
                 username: '',
-                selectedAvatar: '📚',
-                avatars: ['📚', '🦊', '🧙‍♂️', '🕶️', '🤖', '🐯'],
-                newBook: { title: '', author: '', pdfUrl: '' },
-                books: [],
                 messages: [],
+                books: [],
                 chatInput: '',
-
-                async init() {
-                    console.log("App Initialized");
-                    await this.fetchBooks();
-                    await this.fetchMessages();
-                    // Poll for updates every 10 seconds
-                    setInterval(() => { 
-                        if(this.isLoggedIn) {
-                            this.fetchBooks(); 
-                            this.fetchMessages();
-                        }
-                    }, 10000);
-                },
+                sb: null,
 
                 login() {
-                    if(this.username.trim()) this.isLoggedIn = true;
-                },
-
-                async fetchBooks() {
+                    if(!this.username) return alert("Enter name");
+                    
+                    // Connect only when login is clicked
+                    const URL = 'https://xeefrgjdopybjfofsnts.supabase.co';
+                    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZWZyZ2pkb3B5Ympmb2ZzbnRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMzEyNjgsImV4cCI6MjA5NjkwNzI2OH0.9mpDByrFmBOn9MXJkRxb55QbK-A-tBAoMDg9chVbpGk';
+                    
                     try {
-                        const { data, error } = await supabaseClient
-                            .from('books')
-                            .select('*')
-                            .order('created_at', { ascending: false });
-                        if (data) this.books = data;
-                        if (error) console.error("Book fetch error:", error);
-                    } catch (e) { console.log("Network error"); }
-                },
-
-                async fetchMessages() {
-                    try {
-                        const { data, error } = await supabaseClient
-                            .from('messages')
-                            .select('*')
-                            .order('created_at', { ascending: true });
-                        if (data) this.messages = data;
-                        if (error) console.error("Message fetch error:", error);
-                    } catch (e) { console.log("Network error"); }
-                },
-
-                async addBook() {
-                    if (!this.newBook.title || !this.newBook.author) return;
-                    const { error } = await supabaseClient.from('books').insert([
-                        { 
-                            title: this.newBook.title, 
-                            author: this.newBook.author, 
-                            pdf_url: this.newBook.pdfUrl 
-                        }
-                    ]);
-                    if (!error) {
-                        this.newBook = { title: '', author: '', pdfUrl: '' };
-                        this.fetchBooks();
-                    } else {
-                        alert("Error adding book. Did you run the SQL script in Supabase?");
+                        this.sb = window.supabase.createClient(URL, KEY);
+                        this.isLoggedIn = true;
+                        this.fetch();
+                    } catch(e) {
+                        alert("Database error! check F12 console");
                     }
+                },
+
+                async fetch() {
+                    const { data: b } = await this.sb.from('books').select('*');
+                    this.books = b || [];
+                    const { data: m } = await this.sb.from('messages').select('*');
+                    this.messages = m || [];
                 },
 
                 async postMessage() {
-                    if (!this.chatInput) return;
-                    const { error } = await supabaseClient.from('messages').insert([
-                        { 
-                            username: this.username, 
-                            avatar: this.selectedAvatar, 
-                            content: this.chatInput 
-                        }
-                    ]);
-                    if (!error) {
-                        this.chatInput = '';
-                        this.fetchMessages();
-                    }
-                },
-
-                handleAction(book) {
-                    if (book.pdf_url) {
-                        window.open(book.pdf_url, '_blank');
-                    } else {
-                        alert("This is a physical book. Ask " + book.author + " about borrowing it!");
-                    }
+                    await this.sb.from('messages').insert([{ username: this.username, content: this.chatInput }]);
+                    this.chatInput = '';
+                    this.fetch();
                 }
             }
         }
