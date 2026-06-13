@@ -10,29 +10,17 @@
     <style>
         body {
             font-family: 'Lexend Mega', sans-serif;
-            background-color: #FFDE59; /* Vibrant Yellow Base */
+            background-color: #FFDE59;
         }
-        .neo-shadow {
-            shadow-offset: 4px 4px;
-            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
-        }
-        .neo-shadow-sm {
-            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
-        }
+        .neo-shadow { box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); }
+        .neo-shadow-sm { box-shadow: 4px 4px 0px 0px rgba(0,0,0,1); }
         .neo-shadow-active:active {
             box-shadow: 0px 0px 0px 0px rgba(0,0,0,1);
             transform: translate(4px, 4px);
         }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 12px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #000;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #fff;
-            border: 3px solid #000;
-        }
+        .custom-scrollbar::-webkit-scrollbar { width: 12px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #000; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #fff; border: 3px solid #000; }
     </style>
 </head>
 <body class="p-4 md:p-8" x-data="app()">
@@ -42,11 +30,9 @@
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
             <div class="bg-[#FF914D] border-4 border-black p-8 max-w-md w-full neo-shadow">
                 <h1 class="text-4xl font-black mb-6 uppercase italic tracking-tighter">Borrow a Book!</h1>
-                
                 <label class="block text-sm font-bold mb-2 uppercase">Pick a Handle</label>
                 <input type="text" x-model="username" placeholder="BookWorm99" 
                        class="w-full border-4 border-black p-3 mb-6 neo-shadow-sm focus:outline-none text-xl">
-
                 <label class="block text-sm font-bold mb-2 uppercase">Choose your Avatar</label>
                 <div class="grid grid-cols-4 gap-4 mb-8">
                     <template x-for="av in avatars">
@@ -57,7 +43,6 @@
                         </button>
                     </template>
                 </div>
-
                 <button @click="login()" 
                         class="w-full bg-[#8C52FF] text-white border-4 border-black p-4 text-2xl font-black uppercase neo-shadow neo-shadow-active">
                     Enter Library →
@@ -78,36 +63,44 @@
                     </div>
                     <div>
                         <h2 class="text-2xl font-black uppercase leading-none" x-text="username"></h2>
-                        <span class="text-xs font-bold bg-black text-white px-2 py-0.5 uppercase">Librarian Level 1</span>
+                        <span class="text-xs font-bold bg-black text-white px-2 py-0.5 uppercase">Librarian</span>
                     </div>
                 </div>
-                <h1 class="text-3xl font-black italic hidden lg:block tracking-widest">BORROW-A-BOOK</h1>
-                <button @click="isLoggedIn = false" class="bg-red-400 border-4 border-black px-4 py-2 font-bold neo-shadow-sm neo-shadow-active uppercase mt-4 sm:mt-0">
-                    Logout
-                </button>
+                <h1 class="text-3xl font-black italic hidden lg:block tracking-widest uppercase">The Digital Shelf</h1>
+                <button @click="isLoggedIn = false" class="bg-red-400 border-4 border-black px-4 py-2 font-bold neo-shadow-sm neo-shadow-active uppercase">Logout</button>
             </header>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
-                <!-- LEFT COLUMN: ADD & COMMUNITY -->
+                <!-- LEFT COLUMN -->
                 <div class="lg:col-span-1 space-y-8">
                     
                     <!-- ADD BOOK FORM -->
                     <section class="bg-[#FF66C4] border-4 border-black p-6 neo-shadow">
-                        <h3 class="text-2xl font-black uppercase mb-4 tracking-tight">Add to Shelf</h3>
+                        <h3 class="text-2xl font-black uppercase mb-4 tracking-tight">Add a Book</h3>
                         <div class="space-y-4">
-                            <input type="text" x-model="newBook.title" placeholder="Book Title" class="w-full border-4 border-black p-2 font-bold neo-shadow-sm focus:outline-none">
-                            <input type="text" x-model="newBook.author" placeholder="Author Name" class="w-full border-4 border-black p-2 font-bold neo-shadow-sm focus:outline-none">
-                            <button @click="addBook()" class="w-full bg-black text-white p-3 font-black uppercase neo-shadow-active">
-                                Donate Book +
+                            <div>
+                                <label class="text-[10px] font-black uppercase">Title</label>
+                                <input type="text" x-model="newBook.title" class="w-full border-4 border-black p-2 font-bold neo-shadow-sm focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase">Author</label>
+                                <input type="text" x-model="newBook.author" class="w-full border-4 border-black p-2 font-bold neo-shadow-sm focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase text-white">PDF Link (Optional)</label>
+                                <input type="text" x-model="newBook.pdfUrl" placeholder="https://..." class="w-full border-4 border-black p-2 font-bold neo-shadow-sm focus:outline-none">
+                            </div>
+                            <button @click="addBook()" class="w-full bg-black text-white p-3 font-black uppercase neo-shadow-active mt-2">
+                                Add to Shelf +
                             </button>
                         </div>
                     </section>
 
                     <!-- COMMUNITY BOARD -->
-                    <section class="bg-[#7ED957] border-4 border-black p-6 neo-shadow h-[400px] flex flex-col">
+                    <section class="bg-[#7ED957] border-4 border-black p-6 neo-shadow h-[350px] flex flex-col">
                         <h3 class="text-2xl font-black uppercase mb-4 tracking-tight">Chat Wall</h3>
-                        <div class="flex-grow overflow-y-auto custom-scrollbar border-4 border-black bg-white p-4 mb-4 space-y-4">
+                        <div id="chatbox" class="flex-grow overflow-y-auto custom-scrollbar border-4 border-black bg-white p-4 mb-4 space-y-4">
                             <template x-for="msg in messages">
                                 <div class="flex items-start gap-3">
                                     <div class="text-2xl bg-gray-100 border-2 border-black p-1 shrink-0" x-text="msg.avatar"></div>
@@ -119,7 +112,7 @@
                             </template>
                         </div>
                         <div class="flex gap-2">
-                            <input @keyup.enter="postMessage()" type="text" x-model="chatInput" placeholder="Say something..." class="flex-grow border-4 border-black p-2 font-bold text-sm focus:outline-none">
+                            <input @keyup.enter="postMessage()" type="text" x-model="chatInput" placeholder="Say hi!" class="flex-grow border-4 border-black p-2 font-bold text-sm focus:outline-none">
                             <button @click="postMessage()" class="bg-black text-white px-4 border-4 border-black font-black uppercase neo-shadow-active">Post</button>
                         </div>
                     </section>
@@ -127,25 +120,34 @@
 
                 <!-- RIGHT COLUMN: THE BOOK SHELF -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white border-4 border-black p-6 neo-shadow">
+                    <div class="bg-white border-4 border-black p-6 neo-shadow min-h-[600px]">
                         <h3 class="text-4xl font-black uppercase mb-8 italic">The Book Shelf</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <template x-for="book in books" :key="book.id">
-                                <div class="border-4 border-black p-4 flex flex-col justify-between h-48 transition-colors"
-                                     :class="book.available ? 'bg-white' : 'bg-gray-300 opacity-75'">
+                                <div class="border-4 border-black p-4 flex flex-col justify-between h-52 transition-colors relative"
+                                     :class="book.available ? 'bg-white' : 'bg-gray-200 opacity-75'">
+                                    
                                     <div>
                                         <div class="flex justify-between items-start mb-2">
                                             <h4 class="text-xl font-black leading-tight uppercase" x-text="book.title"></h4>
-                                            <span x-show="!book.available" class="bg-red-500 text-white text-[10px] font-black px-2 border-2 border-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">Borrowed</span>
+                                            <template x-if="book.pdfUrl">
+                                                <span class="bg-blue-500 text-white text-[10px] font-black px-2 border-2 border-black uppercase">Digital</span>
+                                            </template>
                                         </div>
                                         <p class="text-sm font-bold text-gray-600 italic" x-text="'by ' + book.author"></p>
                                     </div>
                                     
-                                    <button @click="toggleBorrow(book)" 
-                                            :class="book.available ? 'bg-[#FFBD59]' : 'bg-white'"
-                                            class="w-full border-4 border-black p-2 font-black uppercase neo-shadow-sm neo-shadow-active">
-                                        <span x-text="book.available ? 'Borrow Book' : 'Return Book'"></span>
-                                    </button>
+                                    <div class="space-y-2">
+                                        <template x-if="!book.available">
+                                            <p class="text-[10px] font-black text-red-500 uppercase mb-1">Currently Borrowed</p>
+                                        </template>
+
+                                        <button @click="handleBookAction(book)" 
+                                                :class="book.pdfUrl ? 'bg-[#5CE1E6]' : (book.available ? 'bg-[#FFBD59]' : 'bg-white')"
+                                                class="w-full border-4 border-black p-2 font-black uppercase neo-shadow-sm neo-shadow-active flex items-center justify-center gap-2">
+                                            <span x-text="book.pdfUrl ? '📖 Read PDF' : (book.available ? 'Borrow' : 'Return')"></span>
+                                        </button>
+                                    </div>
                                 </div>
                             </template>
                         </div>
@@ -164,26 +166,21 @@
                 selectedAvatar: '📚',
                 avatars: ['📚', '🦊', '🧙‍♂️', '🕶️', '🐯', '🤖', '🍄', '🍕'],
                 chatInput: '',
-                newBook: { title: '', author: '' },
+                newBook: { title: '', author: '', pdfUrl: '' },
                 
-                // Initial Data
+                // Demo Books - Some with PDFs, some physical
                 books: [
-                    { id: 1, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', available: true },
-                    { id: 2, title: '1984', author: 'George Orwell', available: false },
-                    { id: 3, title: 'Neo-Brutalism 101', author: 'Design King', available: true },
-                    { id: 4, title: 'The Hobbit', author: 'J.R.R. Tolkien', available: true },
+                    { id: 1, title: 'Alice in Wonderland', author: 'Lewis Carroll', available: true, pdfUrl: 'https://www.adobe.com/be_en/active-use/pdf/Alice_in_Wonderland.pdf' },
+                    { id: 2, title: '1984', author: 'George Orwell', available: true, pdfUrl: '' },
+                    { id: 3, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', available: false, pdfUrl: '' },
+                    { id: 4, title: 'Metamorphosis', author: 'Franz Kafka', available: true, pdfUrl: 'https://www.ibiblio.org/kafka/metamorphosis.pdf' },
                 ],
                 messages: [
-                    { user: 'LibraryBot', avatar: '🤖', text: 'Welcome to the 2D library! Be quiet!' },
-                    { user: 'BookWorm', avatar: '📚', text: 'Anyone have any sci-fi recommendations?' }
+                    { user: 'LibraryBot', avatar: '🤖', text: 'Welcome! Physical books can be borrowed, Digital books can be read instantly!' }
                 ],
 
                 login() {
-                    if (this.username.trim()) {
-                        this.isLoggedIn = true;
-                    } else {
-                        alert("Enter a username, book traveler!");
-                    }
+                    if (this.username.trim()) this.isLoggedIn = true;
                 },
 
                 addBook() {
@@ -192,27 +189,32 @@
                             id: Date.now(),
                             title: this.newBook.title,
                             author: this.newBook.author,
+                            pdfUrl: this.newBook.pdfUrl,
                             available: true
                         });
-                        this.newBook.title = '';
-                        this.newBook.author = '';
                         
-                        // Notify chat
                         this.messages.push({
                             user: 'System',
                             avatar: '📢',
-                            text: `${this.username} just added a new book!`
+                            text: `${this.username} added "${this.newBook.title}" to the shelf!`
                         });
+
+                        // Reset form
+                        this.newBook = { title: '', author: '', pdfUrl: '' };
                     }
                 },
 
-                toggleBorrow(book) {
-                    book.available = !book.available;
-                    if(!book.available) {
+                handleBookAction(book) {
+                    if (book.pdfUrl) {
+                        // If it has a PDF, open link in new tab
+                        window.open(book.pdfUrl, '_blank');
+                    } else {
+                        // If no PDF, toggle borrow status
+                        book.available = !book.available;
                         this.messages.push({
                             user: this.username,
                             avatar: this.selectedAvatar,
-                            text: `I just borrowed "${book.title}"!`
+                            text: book.available ? `I returned ${book.title}` : `I'm borrowing ${book.title}!`
                         });
                     }
                 },
@@ -225,10 +227,10 @@
                             text: this.chatInput
                         });
                         this.chatInput = '';
-                        // Scroll chat to bottom (simplified)
+                        // Auto-scroll chat
                         setTimeout(() => {
-                            const chatWall = document.querySelector('.overflow-y-auto');
-                            chatWall.scrollTop = chatWall.scrollHeight;
+                            const chat = document.getElementById('chatbox');
+                            chat.scrollTop = chat.scrollHeight;
                         }, 50);
                     }
                 }
