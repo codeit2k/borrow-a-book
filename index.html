@@ -3,42 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEO-LIBRARY // AURA & HYPE v5.0</title>
+    <title>NEO-LIBRARY // v5.0 ULTIMATE</title>
     
+    <!-- External CSS (Tailwind) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js (Logic Engine) -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
-        :root { --bg: #f0f0f0; --neon-pink: #ff007f; --neon-blue: #00f0ff; --neon-lime: #bcff00; }
-        body { font-family: 'Space Grotesk', sans-serif; background-color: var(--bg); color: #000; overflow-x: hidden; }
-        
+        body { 
+            font-family: 'Space Grotesk', sans-serif; 
+            background-color: #f0f0f0; 
+            color: #000; 
+        }
         .neo-border { border: 4px solid black; box-shadow: 10px 10px 0px 0px #000; }
-        .neo-button { border: 3px solid black; box-shadow: 5px 5px 0px 0px #000; transition: all 0.1s; cursor: pointer; }
+        .neo-button { border: 3px solid black; box-shadow: 5px 5px 0px 0px #000; cursor: pointer; transition: 0.1s; }
         .neo-button:active { transform: translate(3px, 3px); box-shadow: 0px 0px 0px 0px #000; }
         
-        @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-15px) rotate(5deg); } 100% { transform: translateY(0px) rotate(0deg); } }
-        .bot-avatar { animation: float 4s ease-in-out infinite; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        .bot-avatar { animation: float 3s ease-in-out infinite; }
         
-        .aura-gauge { font-family: 'Syncopate', sans-serif; }
         .custom-scroll::-webkit-scrollbar { width: 8px; }
         .custom-scroll::-webkit-scrollbar-track { background: #000; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: var(--neon-pink); border: 1px solid #000; }
-        [x-cloak] { display: none !important; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #ff007f; border: 1px solid #000; }
     </style>
 </head>
-<body x-data="app()" x-init="init()">
+<body x-data="app()">
 
-    <!-- SCREEN: ACCESS GATE -->
+    <!-- LOGIN SCREEN -->
     <div x-show="!isLoggedIn" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#ff007f] p-4">
         <div class="bg-white neo-border p-8 max-w-md w-full text-center">
-            <h1 class="text-6xl font-black italic tracking-tighter mb-4">VIBE CHECK</h1>
-            <p class="mb-6 font-bold uppercase text-xs tracking-widest">Library System v5.0 // Online</p>
-            
-            <input type="text" x-model="username" placeholder="USERNAME/HANDLE" class="w-full border-4 border-black p-4 mb-4 text-center font-bold text-xl focus:outline-none">
+            <h1 class="text-6xl font-black italic mb-4">VIBE CHECK</h1>
+            <input type="text" x-model="username" placeholder="USERNAME" class="w-full border-4 border-black p-4 mb-4 text-center font-bold text-xl outline-none">
             
             <div class="grid grid-cols-4 gap-2 mb-8">
-                <template x-for="av in avatars">
+                <template x-for="av in ['🕶️', '💅', '🔥', '💀', '🤡', '👽', '👾', '🍄']">
                     <button @click="selectedAvatar = av" :class="selectedAvatar === av ? 'bg-black text-white' : 'bg-white'" class="text-2xl p-2 border-2 border-black" x-text="av"></button>
                 </template>
             </div>
@@ -47,171 +48,107 @@
         </div>
     </div>
 
-    <!-- MAIN APP CONTAINER -->
-    <div x-show="isLoggedIn" x-cloak class="p-4 md:p-10 max-w-[1600px] mx-auto">
+    <!-- MAIN APP -->
+    <div x-show="isLoggedIn" class="p-4 md:p-10 max-w-[1500px] mx-auto">
         
-        <!-- TOP NAVIGATION & USER STATS -->
+        <!-- HEADER STATS -->
         <header class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
-            <div class="md:col-span-3 bg-white neo-border p-4 flex items-center gap-4">
-                <div class="w-20 h-20 bg-[#00f0ff] border-4 border-black flex items-center justify-center text-5xl" x-text="selectedAvatar"></div>
+            <div class="md:col-span-4 bg-white neo-border p-6 flex items-center gap-4">
+                <div class="w-16 h-16 bg-[#00f0ff] border-4 border-black flex items-center justify-center text-4xl" x-text="selectedAvatar"></div>
                 <div>
-                    <h2 class="text-2xl font-bold tracking-tighter" x-text="'@'+username"></h2>
-                    <span class="bg-black text-white px-2 py-1 text-[10px] font-bold">LVL 1: MAIN CHARACTER</span>
-                </div>
-            </div>
-
-            <div class="md:col-span-6 bg-[#bcff00] neo-border p-6 flex flex-col justify-center relative overflow-hidden">
-                <div class="flex justify-between items-end relative z-10">
-                    <div>
-                        <p class="text-xs font-black uppercase tracking-widest">Current Aura Points</p>
-                        <p class="text-6xl font-black aura-gauge" x-text="aura"></p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] font-bold uppercase bg-black text-white px-2" x-text="auraStatusMsg"></p>
-                        <p class="text-xs font-bold mt-1">Hype Level: <span x-text="aura > 1100 ? 'GOATED' : 'MID'"></span></p>
-                    </div>
-                </div>
-                <div class="absolute right-0 top-0 text-9xl opacity-10">📚</div>
-            </div>
-
-            <div class="md:col-span-3 bg-white neo-border p-4 flex flex-col justify-between">
-                <div class="flex justify-between items-center">
-                    <p class="font-black text-xs uppercase">System Status</p>
+                    <h2 class="text-2xl font-bold" x-text="'@'+username"></h2>
                     <div class="flex items-center gap-2">
-                        <span :class="isOnline ? 'bg-green-500' : 'bg-red-500'" class="w-3 h-3 rounded-full animate-pulse border-2 border-black"></span>
-                        <span class="text-[10px] font-bold" x-text="isOnline ? 'ONLINE' : 'OFFLINE'"></span>
+                        <span class="w-3 h-3 rounded-full bg-green-500 border-2 border-black animate-pulse"></span>
+                        <span class="text-[10px] font-bold uppercase">System Online</span>
                     </div>
                 </div>
-                <button @click="logout()" class="w-full bg-black text-white p-2 text-xs font-bold neo-button mt-4">LOG_OUT_SYS</button>
+            </div>
+
+            <div class="md:col-span-4 bg-[#bcff00] neo-border p-6 text-center">
+                <p class="text-xs font-black uppercase opacity-60">Your Aura Points</p>
+                <p class="text-5xl font-black" x-text="aura"></p>
+                <p class="text-[10px] font-bold uppercase mt-1" x-text="auraStatus"></p>
+            </div>
+
+            <div class="md:col-span-4 bg-white neo-border p-6 flex items-center justify-center">
+                <button @click="logout()" class="w-full bg-black text-white p-3 font-bold neo-button uppercase text-sm">Log Out</button>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
             
-            <!-- COLUMN 1: THE BOT & CHAT -->
-            <div class="lg:col-span-3 space-y-8">
-                <div class="bg-white neo-border h-[650px] flex flex-col overflow-hidden relative">
-                    <div class="bg-black p-4 flex items-center gap-4">
-                        <div class="w-12 h-12 bg-white rounded-full border-2 border-black flex items-center justify-center text-3xl bot-avatar">🤖</div>
-                        <div>
-                            <p class="text-white font-black text-sm">LIB-GEN_Z</p>
-                            <p class="text-[#bcff00] text-[8px] font-bold uppercase animate-pulse">Ready to Roast</p>
-                        </div>
+            <!-- CHAT BOT -->
+            <div class="lg:col-span-3">
+                <div class="bg-white neo-border h-[600px] flex flex-col overflow-hidden">
+                    <div class="bg-black text-white p-4 flex items-center gap-3">
+                        <div class="text-3xl bot-avatar">🤖</div>
+                        <p class="font-bold text-sm">LIB-GEN_Z</p>
                     </div>
-                    
-                    <div id="chatbox" class="flex-grow p-4 space-y-4 overflow-y-auto custom-scroll bg-gray-50">
+                    <div id="chatbox" class="flex-grow p-4 space-y-4 overflow-y-auto bg-gray-50 custom-scroll">
                         <template x-for="m in messages">
-                            <div class="flex flex-col" :class="m.username === 'Librarian Bot' ? 'items-start' : 'items-end'">
-                                <span class="text-[8px] font-black uppercase mb-1" x-text="m.username"></span>
-                                <div :class="m.username === 'Librarian Bot' ? 'bg-black text-white' : 'bg-[#00f0ff] border-2 border-black'" 
-                                     class="p-3 text-xs font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-w-[85%]">
-                                    <span x-text="m.content"></span>
+                            <div class="flex flex-col" :class="m.user === 'Bot' ? 'items-start' : 'items-end'">
+                                <div :class="m.user === 'Bot' ? 'bg-black text-white' : 'bg-[#00f0ff] border-2 border-black'" class="p-3 text-xs font-bold shadow-[4px_4px_0px_0px_#000] max-w-[85%]">
+                                    <span x-text="m.text"></span>
                                 </div>
                             </div>
                         </template>
                     </div>
-
-                    <div class="p-4 bg-white border-t-4 border-black">
-                        <div class="flex gap-2">
-                            <input @keyup.enter="postMessage()" x-model="chatInput" placeholder="Say something..." class="flex-grow p-3 border-2 border-black text-xs font-bold outline-none focus:bg-yellow-50">
-                            <button @click="postMessage()" class="bg-[#ff007f] text-white px-4 border-2 border-black font-black text-xs neo-button">SEND</button>
-                        </div>
+                    <div class="p-4 bg-white border-t-4 border-black flex gap-2">
+                        <input x-model="chatInput" @keyup.enter="sendMessage()" placeholder="Type..." class="flex-grow p-2 border-2 border-black font-bold outline-none">
+                        <button @click="sendMessage()" class="bg-[#ff007f] text-white px-4 font-bold neo-button">GO</button>
                     </div>
                 </div>
             </div>
 
-            <!-- COLUMN 2: COMMUNITY SHELF & FREE PDFS -->
+            <!-- SHELF & PDFS -->
             <div class="lg:col-span-6 space-y-8">
-                <!-- THE DIGITAL VAULT (FREE PDFS) -->
                 <div class="bg-[#00f0ff] neo-border p-6">
-                    <h3 class="text-3xl font-black uppercase italic mb-6">Legendary PDFs (Free)</h3>
+                    <h3 class="text-2xl font-black uppercase mb-4">Free PDF Vault</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <template x-for="pdf in freePdfs">
-                            <div class="bg-white border-4 border-black p-4 flex justify-between items-center hover:bg-yellow-50 transition-colors">
-                                <div>
-                                    <p class="font-black text-xs uppercase" x-text="pdf.title"></p>
-                                    <p class="text-[9px] font-bold text-gray-500 uppercase" x-text="pdf.author"></p>
-                                </div>
-                                <a :href="pdf.url" target="_blank" class="bg-[#bcff00] border-2 border-black px-3 py-1 text-[10px] font-black neo-button">READ PDF</a>
+                        <template x-for="pdf in pdfs">
+                            <div class="bg-white border-2 border-black p-3 flex justify-between items-center">
+                                <span class="font-bold text-xs uppercase" x-text="pdf.t"></span>
+                                <a :href="pdf.u" target="_blank" class="bg-[#bcff00] px-2 py-1 text-[10px] font-black neo-button">OPEN</a>
                             </div>
                         </template>
                     </div>
                 </div>
 
-                <!-- USER SHELF -->
-                <div class="bg-white neo-border p-8">
-                    <div class="flex justify-between items-center mb-10 border-b-8 border-black pb-4">
-                        <h3 class="text-4xl font-black uppercase italic tracking-tighter">Community Shelf</h3>
-                        <button @click="showAdd = !showAdd" class="bg-black text-white px-6 py-2 font-bold text-xs neo-button" x-text="showAdd ? 'CLOSE' : '+ ADD BOOK'"></button>
-                    </div>
-
-                    <div x-show="showAdd" class="mb-10 p-6 border-4 border-black border-dashed bg-yellow-50">
-                        <div class="grid grid-cols-2 gap-4">
-                            <input x-model="newBook.title" placeholder="TITLE" class="p-3 border-2 border-black font-bold outline-none">
-                            <input x-model="newBook.author" placeholder="AUTHOR" class="p-3 border-2 border-black font-bold outline-none">
-                            <input x-model="newBook.pdf" placeholder="PDF LINK (OPTIONAL)" class="col-span-2 p-3 border-2 border-black font-bold text-xs outline-none">
-                            <button @click="addBook()" class="col-span-2 bg-black text-white p-4 font-black uppercase neo-button">POST TO SHELF</button>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <template x-for="book in books">
-                            <div class="bg-white border-4 border-black p-6 flex flex-col justify-between h-56 relative shadow-[6px_6px_0px_0px_#000]">
-                                <div class="absolute -top-3 -right-3 bg-[#ff007f] text-white px-2 py-1 text-[8px] font-black uppercase" x-show="book.isNew">NEW</div>
-                                <div>
-                                    <h4 class="text-xl font-black uppercase leading-tight" x-text="book.title"></h4>
-                                    <p class="text-[10px] font-bold text-gray-400 mt-2" x-text="'BY ' + book.author"></p>
-                                </div>
-                                <div class="mt-6 flex gap-2">
-                                    <button @click="borrowBook(book)" :disabled="book.borrowedBy" :class="book.borrowedBy ? 'bg-gray-200' : 'bg-[#bcff00]'" class="flex-grow border-2 border-black p-2 font-black text-[10px] uppercase">
-                                        <span x-text="book.borrowedBy ? 'Taken by ' + book.borrowedBy : 'Borrow'"></span>
-                                    </button>
-                                    <button x-show="book.pdf" @click="window.open(book.pdf, '_blank')" class="bg-white border-2 border-black px-4 text-sm">📖</button>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-            </div>
-
-            <!-- COLUMN 3: TRENDING TODAY & HOT TAKES -->
-            <div class="lg:col-span-3 space-y-8">
-                <!-- TRENDING TOP 10 -->
-                <div class="bg-black text-white neo-border p-6">
-                    <h3 class="text-xl font-black uppercase italic mb-6 text-[#bcff00] tracking-widest underline decoration-pink-500 underline-offset-8">Trending Today</h3>
-                    <div class="space-y-3">
-                        <template x-for="(t, i) in trending">
-                            <div class="flex items-center gap-4 group">
-                                <span class="text-2xl font-black text-[#ff007f] opacity-50 group-hover:opacity-100 transition-opacity" x-text="String(i+1).padStart(2, '0')"></span>
-                                <div class="overflow-hidden">
-                                    <p class="text-[11px] font-black uppercase truncate" x-text="t.title"></p>
-                                    <p class="text-[8px] text-gray-400 font-bold" x-text="t.author"></p>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-
-                <!-- HOT TAKES -->
                 <div class="bg-white neo-border p-6">
-                    <h3 class="text-xs font-black uppercase mb-4 tracking-tighter">Bot's Hot Takes (Reviews)</h3>
-                    <div class="bg-gray-100 p-4 border-2 border-black relative">
-                        <span class="absolute -top-3 -left-2 text-2xl">💬</span>
-                        <p class="text-xs font-bold italic leading-relaxed" x-text="hotTake"></p>
-                    </div>
-                    <button @click="generateHotTake()" class="w-full bg-[#ff007f] text-white p-2 mt-4 font-black text-[10px] neo-button">GET ANOTHER ROAST</button>
-                </div>
-
-                <!-- AURA STATS -->
-                <div class="bg-[#bcff00] neo-border p-4">
-                    <h4 class="text-[10px] font-black uppercase mb-2">Live Session Stats</h4>
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-[10px] font-bold"><span>Total Books</span><span x-text="books.length"></span></div>
-                        <div class="flex justify-between text-[10px] font-bold"><span>Interaction Aura</span><span x-text="aura - 1000"></span></div>
-                        <div class="flex justify-between text-[10px] font-bold"><span>Hype Status</span><span class="text-pink-600">UNSTABLE</span></div>
+                    <h3 class="text-3xl font-black uppercase mb-6 italic tracking-tighter">Community Shelf</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <template x-for="b in books">
+                            <div class="border-4 border-black p-4 flex flex-col justify-between h-44 shadow-[4px_4px_0px_0px_#000]">
+                                <h4 class="font-black text-lg uppercase leading-tight" x-text="b.title"></h4>
+                                <button @click="borrow(b)" :disabled="b.taken" :class="b.taken ? 'bg-gray-200' : 'bg-[#bcff00]'" class="w-full border-2 border-black p-2 font-black text-[10px] uppercase">
+                                    <span x-text="b.taken ? 'Taken by ' + b.taken : 'Borrow'"></span>
+                                </button>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
+
+            <!-- TRENDING TODAY -->
+            <div class="lg:col-span-3 space-y-8">
+                <div class="bg-black text-white neo-border p-6">
+                    <h3 class="text-xl font-black uppercase mb-6 text-[#bcff00]">Trending Top 10</h3>
+                    <div class="space-y-4">
+                        <template x-for="(t, i) in trending">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xl font-black text-[#ff007f]" x-text="i+1"></span>
+                                <span class="text-[10px] font-bold uppercase truncate" x-text="t"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="bg-white neo-border p-6">
+                    <h3 class="text-xs font-black uppercase mb-2">Bot's Hot Take</h3>
+                    <p class="text-xs italic font-bold border-l-4 border-pink-500 pl-2" x-text="hotTake"></p>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -219,47 +156,72 @@
         function app() {
             return {
                 isLoggedIn: false,
-                isOnline: true,
                 username: '',
                 selectedAvatar: '🕶️',
-                avatars: ['🕶️', '💅', '🔥', '💀', '🤡', '👽', '👾', '🍄'],
                 aura: 1000,
-                auraStatusMsg: 'VIBING',
-                messages: [{username: 'Librarian Bot', content: 'Vibe check passed. Welcome to the archive. Ask for "recs" or a "joke" if ur feeling brave.'}],
+                auraStatus: 'VIBING',
                 chatInput: '',
-                showAdd: false,
-                newBook: { title: '', author: '', pdf: '' },
-                hotTake: "If you think 'The Art of War' makes you a strategist, you probably can't even win at Connect Four. No cap.",
-                
-                // ACTUAL TOP 10 BESTSELLERS (2024-2025 Real Data)
-                trending: [
-                    { title: "Atomic Habits", author: "James Clear" },
-                    { title: "It Ends With Us", author: "Colleen Hoover" },
-                    { title: "The Housemaid", author: "Freida McFadden" },
-                    { title: "Iron Flame", author: "Rebecca Yarros" },
-                    { title: "Lessons in Chemistry", author: "Bonnie Garmus" },
-                    { title: "The Silent Patient", author: "Alex Michaelides" },
-                    { title: "Funny Story", author: "Emily Henry" },
-                    { title: "Yellowface", author: "R.F. Kuang" },
-                    { title: "Dune: Part One", author: "Frank Herbert" },
-                    { title: "Verity", author: "Colleen Hoover" }
-                ],
-                
-                // FREE PDF VAULT
-                freePdfs: [
-                    { title: "The Great Gatsby", author: "F. Scott Fitzgerald", url: "https://www.ibiblio.org/ebooks/Fitzgerald/Gatsby/Gatsby.pdf" },
-                    { title: "1984", author: "George Orwell", url: "https://rauterberg.employee.id.tue.nl/lecturenotes/DDM110/Orwell-1984.pdf" },
-                    { title: "Metamorphosis", author: "Franz Kafka", url: "https://www.gutenberg.org/files/5200/5200-h/5200-h.htm" },
-                    { title: "Beyond Good and Evil", author: "Nietzsche", url: "https://www.gutenberg.org/files/1998/1998-pdf.pdf" }
-                ],
-                
+                hotTake: "If you read for the 'aesthetic' but don't finish the book, your aura is zero. No cap.",
+                messages: [{user: 'Bot', text: 'Vibe check. Say something or get roasted.'}],
                 books: [
-                    { title: "No Longer Human", author: "Osamu Dazai", borrowedBy: null, isNew: false, pdf: null },
-                    { title: "Meditations", author: "Marcus Aurelius", borrowedBy: null, isNew: false, pdf: null }
+                    {title: 'No Longer Human', taken: null},
+                    {title: 'Meditations', taken: null},
+                    {title: 'Atomic Habits', taken: null},
+                    {title: 'Crime & Punishment', taken: null}
+                ],
+                trending: [
+                    "Atomic Habits - Clear",
+                    "It Ends With Us - Hoover",
+                    "The Housemaid - McFadden",
+                    "Iron Flame - Yarros",
+                    "1984 - Orwell",
+                    "Yellowface - Kuang",
+                    "Dune - Herbert",
+                    "The Silent Patient",
+                    "Funny Story - Henry",
+                    "Verity - Hoover"
+                ],
+                pdfs: [
+                    {t: 'Gatsby', u: 'https://www.ibiblio.org/ebooks/Fitzgerald/Gatsby/Gatsby.pdf'},
+                    {t: '1984', u: 'https://rauterberg.employee.id.tue.nl/lecturenotes/DDM110/Orwell-1984.pdf'},
+                    {t: 'Kafka', u: 'https://www.gutenberg.org/files/5200/5200-h/5200-h.htm'}
                 ],
 
-                init() {
-                    // Simulating Offline/Online Randomly
-                    setInterval(() => { this.isOnline = Math.random() > 0.1; }, 10000);
+                login() {
+                    if(this.username) {
+                        this.isLoggedIn = true;
+                        // Start Aura Decay
+                        setInterval(() => { this.aura -= 1; this.auraStatus = 'Aura Draining (Idle)'; }, 10000);
+                    }
+                },
+                logout() { this.isLoggedIn = false; },
+                borrow(b) {
+                    b.taken = this.username;
+                    this.aura += 50;
+                    this.auraStatus = 'Aura Gain: +50!';
+                    this.messages.push({user: 'Bot', text: `You took ${b.title}. Hope ur reading level is higher than ur aura.`});
+                },
+                sendMessage() {
+                    if(!this.chatInput) return;
+                    this.messages.push({user: 'You', text: this.chatInput});
+                    const input = this.chatInput.toLowerCase();
+                    this.chatInput = '';
+                    this.aura += 5;
                     
-                    // AURA DECAY (Decays every 15 seconds)
+                    setTimeout(() => {
+                        if(input.includes('rec')) {
+                            this.messages.push({user: 'Bot', text: 'If ur feeling delulu, read Romance. If ur a villain, read Strategy.'});
+                        } else if(input.includes('hi') || input.includes('hello')) {
+                            this.messages.push({user: 'Bot', text: 'Slay. Welcome to the archive. Keep it down.'});
+                        } else {
+                            this.messages.push({user: 'Bot', text: 'That message was mid. Anyway, read a book.'});
+                        }
+                        const c = document.getElementById('chatbox');
+                        c.scrollTop = c.scrollHeight;
+                    }, 600);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
