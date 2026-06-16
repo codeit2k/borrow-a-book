@@ -3,208 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEO-LIBRARY // V3.0</title>
+    <title>NEO-LIBRARY v4.0 // AURA + HYPE</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
-        :root {
-            --bg: #bcff00; /* Cyber Lime */
-            --primary: #8a2be2; /* Electric Purple */
-            --secondary: #ff007f; /* Hot Pink */
-        }
-        body { 
-            font-family: 'Space Grotesk', sans-serif; 
-            background-color: var(--bg); 
-            color: #000;
-        }
-        .neo-card { 
-            border: 4px solid #000; 
-            background: white;
-            box-shadow: 10px 10px 0px 0px #000;
-            transition: all 0.2s ease;
-        }
-        .neo-card:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 14px 14px 0px 0px #000;
-        }
-        .neo-btn {
-            border: 3px solid #000;
-            box-shadow: 4px 4px 0px 0px #000;
-            transition: all 0.1s active;
-        }
-        .neo-btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 0px 0px 0px 0px #000;
-        }
-        .sticker {
-            position: absolute;
-            pointer-events: none;
-            z-index: 10;
-            filter: drop-shadow(2px 2px 0px #000);
-        }
-        .custom-scroll::-webkit-scrollbar { width: 10px; }
-        .custom-scroll::-webkit-scrollbar-track { background: #000; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: var(--secondary); border: 2px solid #000; }
+        :root { --bg: #00f0ff; --primary: #ff007f; --accent: #bcff00; }
+        body { font-family: 'Space Grotesk', sans-serif; background-color: var(--bg); color: #000; overflow-x: hidden; }
+        .neo-brutal { border: 4px solid black; box-shadow: 8px 8px 0px 0px #000; transition: all 0.1s; }
+        .neo-brutal:hover { transform: translate(-2px, -2px); box-shadow: 12px 12px 0px 0px #000; }
+        .aura-badge { font-family: 'Syncopate', sans-serif; }
         
+        @keyframes float { 0% { transform: rotate(0deg) translateY(0px); } 50% { transform: rotate(3deg) translateY(-10px); } 100% { transform: rotate(0deg) translateY(0px); } }
+        .floating { animation: float 4s ease-in-out infinite; }
+        
+        .trending-row:nth-child(even) { background-color: #f3f3f3; }
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #000; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: var(--primary); border: 1px solid #000; }
         [x-cloak] { display: none !important; }
     </style>
 </head>
 <body x-data="app()" x-init="init()">
 
-    <!-- LOGIN (VIBE CHECK) -->
-    <div x-show="!isLoggedIn" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#bcff00] p-4">
-        <div class="neo-card p-8 max-w-md w-full relative overflow-hidden">
-            <div class="absolute -right-5 -top-5 text-8xl opacity-20">✨</div>
-            <h1 class="text-5xl font-bold italic tracking-tighter mb-2">VIBE CHECK.</h1>
-            <p class="mb-6 font-medium lowercase">identify yourself before the bot roasts you.</p>
+    <!-- OVERLAY: VIBE CHECK -->
+    <div x-show="!isLoggedIn" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div class="bg-white neo-brutal p-8 max-w-md w-full text-center relative overflow-hidden">
+            <div class="absolute -left-10 -bottom-10 text-9xl opacity-10 floating">📚</div>
+            <h1 class="text-4xl font-black uppercase mb-4 italic tracking-tighter">Enter the Archive</h1>
+            <p class="mb-6 font-bold text-sm uppercase">Current Global Hype: <span class="text-pink-600">UNSTABLE</span></p>
             
-            <input type="text" x-model="username" placeholder="your name/handle..." class="w-full border-4 border-black p-4 mb-6 focus:outline-none text-xl font-bold">
+            <input type="text" x-model="username" placeholder="NAME/HANDLE" class="w-full border-4 border-black p-4 mb-4 text-center font-bold text-xl focus:bg-yellow-50 outline-none">
             
-            <div class="grid grid-cols-4 gap-3 mb-8">
+            <div class="grid grid-cols-4 gap-2 mb-6">
                 <template x-for="av in avatars">
-                    <button @click="selectedAvatar = av" 
-                        :class="selectedAvatar === av ? 'bg-[#ff007f] text-white' : 'bg-white'"
-                        class="text-2xl p-2 border-2 border-black neo-btn" x-text="av"></button>
+                    <button @click="selectedAvatar = av" :class="selectedAvatar === av ? 'bg-pink-500 text-white' : 'bg-white'" class="text-2xl p-2 border-2 border-black hover:bg-black hover:text-white transition-colors" x-text="av"></button>
                 </template>
             </div>
             
-            <button @click="login()" class="w-full bg-[#8a2be2] text-white p-5 text-2xl font-bold uppercase neo-btn">
-                ENTER THE VAULT →
-            </button>
+            <button @click="login()" class="w-full bg-[#bcff00] p-5 text-2xl font-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 transition-all">LOAD PROFILE →</button>
         </div>
     </div>
 
-    <!-- MAIN APP -->
-    <div x-show="isLoggedIn" x-cloak class="p-4 md:p-8 max-w-7xl mx-auto">
+    <!-- MAIN DASHBOARD -->
+    <div x-show="isLoggedIn" x-cloak class="p-4 md:p-8 max-w-[1600px] mx-auto">
         
-        <!-- GEN-Z HEADER -->
-        <header class="flex flex-wrap justify-between items-center bg-white neo-card p-6 mb-10">
-            <div class="flex items-center gap-5">
-                <div class="bg-[#ff007f] border-4 border-black w-20 h-20 flex items-center justify-center text-5xl shadow-[4px_4px_0px_0px_#000]" x-text="selectedAvatar"></div>
+        <!-- TOP NAV / STATS -->
+        <header class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 items-center">
+            <div class="bg-white neo-brutal p-4 flex items-center gap-4">
+                <div class="w-16 h-16 bg-pink-500 border-4 border-black flex items-center justify-center text-4xl" x-text="selectedAvatar"></div>
                 <div>
-                    <h2 class="text-3xl font-bold lowercase tracking-tighter" x-text="'@' + username"></h2>
-                    <div class="flex gap-2 mt-1">
-                        <span class="bg-[#bcff00] border-2 border-black px-2 py-0.5 text-[10px] font-bold uppercase tracking-tighter">verified reader</span>
-                        <span class="bg-black text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-tighter">aura: +1000</span>
-                    </div>
+                    <h2 class="font-bold text-xl" x-text="'@'+username"></h2>
+                    <p class="text-[10px] font-black uppercase bg-black text-white px-2 inline-block">Member Level: Rookie</p>
                 </div>
             </div>
-            <button @click="logout()" class="bg-black text-white px-8 py-3 font-bold neo-btn uppercase text-sm">log out</button>
+
+            <div class="bg-[#ff007f] neo-brutal p-4 text-white text-center relative overflow-hidden">
+                <div class="relative z-10">
+                    <p class="text-xs font-black uppercase tracking-widest opacity-80">Your Aura Points</p>
+                    <p class="text-5xl font-black aura-badge" x-text="aura"></p>
+                    <p class="text-[10px] mt-1 font-bold" :class="auraChange > 0 ? 'text-green-300' : 'text-yellow-300'" x-text="auraStatusMsg"></p>
+                </div>
+                <div class="absolute right-0 top-0 text-6xl opacity-20 -rotate-12">✨</div>
+            </div>
+
+            <div class="bg-white neo-brutal p-4 flex justify-between items-center">
+                <div>
+                    <p class="text-xs font-black uppercase">Library Health</p>
+                    <div class="w-32 h-4 border-2 border-black bg-gray-200 mt-1">
+                        <div class="h-full bg-green-400" :style="'width:' + (books.length * 5) + '%'"></div>
+                    </div>
+                </div>
+                <button @click="logout()" class="bg-black text-white p-2 font-bold text-xs uppercase hover:bg-red-500 transition-colors">Exit_Sys</button>
+            </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- LEFT: INTERACT & BOT -->
-            <div class="lg:col-span-4 space-y-10">
-                
-                <!-- THE SASSY BOT -->
-                <section class="bg-white neo-card h-[600px] flex flex-col relative overflow-hidden">
-                    <div class="bg-black text-white p-3 flex justify-between items-center">
-                        <span class="font-bold text-xs uppercase tracking-widest">Librarian_Bot_v3.exe</span>
-                        <div class="flex gap-1">
-                            <div class="w-2 h-2 bg-red-500 rounded-full"></div>
-                            <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+            <!-- LEFT: BOT ARCHIVE -->
+            <div class="lg:col-span-3 space-y-8">
+                <div class="bg-white neo-brutal flex flex-col h-[650px] overflow-hidden">
+                    <div class="bg-black text-white p-4 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-500 border-2 border-white rounded-full flex items-center justify-center text-xl floating">🤖</div>
+                        <div>
+                            <p class="font-bold text-sm">LIB-GEN_Z</p>
+                            <p class="text-[8px] uppercase tracking-tighter text-green-400 animate-pulse">Online & Judging</p>
                         </div>
                     </div>
-                    
-                    <div id="chatbox" class="flex-grow overflow-y-auto custom-scroll p-4 space-y-4 bg-[#f0f0f0]">
+
+                    <div id="chatbox" class="flex-grow overflow-y-auto custom-scroll p-4 space-y-4 bg-gray-50">
                         <template x-for="m in messages">
                             <div class="flex flex-col" :class="m.username === 'Librarian Bot' ? 'items-start' : 'items-end'">
-                                <span class="text-[10px] font-bold uppercase mb-1" x-text="m.username"></span>
-                                <div :class="m.username === 'Librarian Bot' ? 'bg-[#8a2be2] text-white' : 'bg-white border-2 border-black'" 
-                                     class="p-3 max-w-[90%] text-sm font-medium shadow-[4px_4px_0px_0px_#000]">
+                                <div :class="m.username === 'Librarian Bot' ? 'bg-black text-white' : 'bg-white border-2 border-black text-black'" 
+                                     class="p-3 text-xs font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] max-w-[90%]">
                                     <span x-text="m.content"></span>
                                 </div>
                             </div>
                         </template>
                     </div>
 
-                    <div class="p-4 border-t-4 border-black bg-white">
-                        <p class="text-[10px] font-bold mb-2 uppercase opacity-50 italic">Try asking for: "recs", "sad books", or "horror"</p>
+                    <div class="p-4 border-t-4 border-black bg-[#bcff00]">
                         <div class="flex gap-2">
-                            <input @keyup.enter="postMessage()" x-model="chatInput" placeholder="say something..." class="flex-grow border-2 border-black p-3 text-sm focus:outline-none">
-                            <button @click="postMessage()" class="bg-[#ff007f] text-white px-4 border-2 border-black font-bold neo-btn">send</button>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- ADD BOOK -->
-                <section class="bg-[#8a2be2] neo-card p-6 text-white">
-                    <h3 class="text-2xl font-bold uppercase italic mb-4">Add to the feed</h3>
-                    <div class="space-y-4">
-                        <input type="text" x-model="newBook.title" placeholder="book title..." class="w-full p-3 text-black border-2 border-black focus:outline-none font-bold">
-                        <input type="text" x-model="newBook.author" placeholder="author..." class="w-full p-3 text-black border-2 border-black focus:outline-none text-sm">
-                        <input type="text" x-model="newBook.pdfUrl" placeholder="pdf link (optional)" class="w-full p-3 text-black border-2 border-black focus:outline-none text-xs">
-                        <button @click="addBook()" class="w-full bg-[#bcff00] text-black p-4 font-bold uppercase border-2 border-black neo-btn">post it</button>
-                    </div>
-                </section>
-            </div>
-
-            <!-- RIGHT: THE SHELF -->
-            <div class="lg:col-span-8 space-y-10">
-                
-                <!-- PUBLIC PDFS -->
-                <div class="bg-black p-1 neo-card">
-                    <div class="bg-white p-6 border-2 border-black">
-                        <h3 class="text-3xl font-bold uppercase tracking-tighter mb-6 flex items-center gap-3">
-                            <span class="bg-[#ff007f] text-white px-2">FREE</span> READS FR FR
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <template x-for="pb in publicBooks">
-                                <div class="border-2 border-black p-4 flex justify-between items-center hover:bg-yellow-50">
-                                    <div>
-                                        <p class="font-bold text-sm uppercase" x-text="pb.title"></p>
-                                        <p class="text-[10px] font-medium text-gray-500" x-text="pb.genre + ' • ' + pb.author"></p>
-                                    </div>
-                                    <a :href="pb.url" target="_blank" class="bg-[#bcff00] border-2 border-black px-3 py-1 font-bold text-[10px] neo-btn">OPEN PDF</a>
-                                </div>
-                            </template>
+                            <input @keyup.enter="postMessage()" x-model="chatInput" placeholder="Ask for a 'hot take'..." class="flex-grow p-2 border-2 border-black text-xs font-bold focus:outline-none">
+                            <button @click="postMessage()" class="bg-black text-white px-4 border-2 border-black font-bold text-xs">GO</button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- LIVE USER SHELF -->
-                <div class="bg-white neo-card p-8 relative min-h-[500px]">
-                    <div class="absolute -right-6 top-10 bg-[#ff007f] text-white px-4 py-2 border-4 border-black rotate-12 font-bold z-10">LIVE FEED</div>
-                    
-                    <h3 class="text-5xl font-bold uppercase italic tracking-tighter mb-10 border-b-8 border-black inline-block">The Shelf</h3>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                        <template x-for="book in books" :key="book.id">
-                            <div class="neo-card p-6 flex flex-col justify-between h-64 hover:rotate-1" :style="'background-color:' + (book.borrowed_by ? '#eee' : 'white')">
+            <!-- CENTER: THE MAIN SHELF -->
+            <div class="lg:col-span-6 space-y-8">
+                <div class="bg-white neo-brutal p-6">
+                    <div class="flex justify-between items-end mb-6">
+                        <h3 class="text-4xl font-black uppercase italic tracking-tighter">The Live Feed</h3>
+                        <button @click="showAdd = !showAdd" class="bg-black text-white px-4 py-2 font-bold text-sm neo-brutal" x-text="showAdd ? 'CLOSE X' : '+ ADD BOOK'"></button>
+                    </div>
+
+                    <div x-show="showAdd" x-transition class="mb-8 p-4 bg-yellow-100 border-4 border-black border-dashed">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input x-model="newBook.title" placeholder="TITLE" class="p-2 border-2 border-black font-bold">
+                            <input x-model="newBook.author" placeholder="AUTHOR" class="p-2 border-2 border-black font-bold">
+                            <input x-model="newBook.pdfUrl" placeholder="PDF URL" class="col-span-2 p-2 border-2 border-black text-xs">
+                            <button @click="addBook()" class="col-span-2 bg-pink-500 text-white p-3 font-black uppercase border-2 border-black">Drop the Book</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <template x-for="book in books">
+                            <div class="bg-white border-4 border-black p-4 flex flex-col justify-between hover:scale-[1.02] transition-transform shadow-[4px_4px_0px_0px_#000]" 
+                                 :class="book.borrowed_by ? 'opacity-50 grayscale' : ''">
                                 <div>
-                                    <div class="flex justify-between items-start mb-2">
-                                        <h4 class="text-2xl font-bold leading-none tracking-tight uppercase" x-text="book.title"></h4>
-                                        <span x-show="book.pdf_url" class="text-xl">📄</span>
-                                    </div>
-                                    <p class="text-xs font-bold text-gray-500 uppercase italic" x-text="'by ' + book.author"></p>
-                                    
-                                    <template x-if="book.borrowed_by">
-                                        <div class="mt-4 bg-black text-white p-2 text-[10px] font-bold uppercase text-center border-2 border-black">
-                                            taken by <span x-text="book.borrowed_by"></span>
-                                        </div>
-                                    </template>
+                                    <h4 class="font-black text-lg uppercase leading-tight" x-text="book.title"></h4>
+                                    <p class="text-[10px] font-bold text-gray-400 mt-1" x-text="'Author: ' + book.author"></p>
                                 </div>
-
-                                <div class="flex gap-2 mt-6">
-                                    <template x-if="!book.borrowed_by">
-                                        <button @click="borrowBook(book)" class="flex-grow bg-[#bcff00] border-2 border-black p-3 font-bold uppercase text-xs neo-btn">Borrow</button>
-                                    </template>
-                                    <template x-if="book.borrowed_by === username">
-                                        <button @click="returnBook(book)" class="flex-grow bg-[#ff007f] text-white border-2 border-black p-3 font-bold uppercase text-xs neo-btn">Return</button>
-                                    </template>
-                                    <template x-if="book.pdf_url">
-                                        <button @click="window.open(book.pdf_url, '_blank')" class="bg-white border-2 border-black px-4 neo-btn">📖</button>
-                                    </template>
+                                <div class="mt-6 flex gap-2">
+                                    <button @click="borrowBook(book)" x-show="!book.borrowed_by" class="flex-grow bg-[#bcff00] border-2 border-black p-2 font-bold text-[10px] uppercase">Borrow</button>
+                                    <button @click="returnBook(book)" x-show="book.borrowed_by === username" class="flex-grow bg-blue-400 border-2 border-black p-2 font-bold text-[10px] uppercase">Return</button>
+                                    <button x-show="book.pdf_url" @click="window.open(book.pdf_url, '_blank')" class="bg-white border-2 border-black p-2 text-[10px]">📖</button>
                                 </div>
                             </div>
                         </template>
                     </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: TRENDING & GENRES -->
+            <div class="lg:col-span-3 space-y-8">
+                <div class="bg-black text-white neo-brutal p-6">
+                    <h3 class="text-2xl font-black uppercase italic mb-4 text-[#bcff00]">Trending Now</h3>
+                    <div class="space-y-4">
+                        <template x-for="(trend, index) in trending">
+                            <div class="flex items-center gap-3 border-b border-gray-700 pb-2">
+                                <span class="text-2xl font-black text-pink-500" x-text="'#' + (index + 1)"></span>
+                                <div>
+                                    <p class="text-xs font-bold uppercase truncate w-40" x-text="trend.title"></p>
+                                    <p class="text-[8px] text-gray-400 uppercase" x-text="trend.genre"></p>
+                                </div>
+                                <div class="ml-auto bg-[#bcff00] text-black text-[8px] px-1 font-bold">HOT</div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="bg-white neo-brutal p-4">
+                    <h3 class="font-black uppercase mb-3 text-sm">Bot's Hot Takes (Reviews)</h3>
+                    <div class="bg-gray-100 p-3 border-2 border-black text-[11px] font-bold italic">
+                        "If you read <span class="text-pink-600" x-text="hotTake.book"></span>, you're literally <span x-text="hotTake.review"></span>."
+                    </div>
+                    <button @click="generateHotTake()" class="mt-2 w-full bg-black text-white p-1 text-[10px] font-bold">GET ANOTHER TAKE</button>
+                </div>
+                
+                <div class="relative">
+                    <img src="https://img.freepik.com/free-vector/hand-drawn-sticker-style-libra-sign_23-2149204068.jpg" class="w-32 absolute -top-10 -right-5 rotate-12 opacity-50 grayscale hover:grayscale-0 transition-all">
                 </div>
             </div>
         </div>
@@ -217,17 +190,23 @@
                 username: '',
                 selectedAvatar: '🕶️',
                 avatars: ['🕶️', '💅', '🔥', '💀', '🧊', '🤡', '👽', '👾'],
+                aura: 1000,
+                auraChange: 0,
+                auraStatusMsg: 'VIBING',
                 newBook: { title: '', author: '', pdfUrl: '' },
                 books: [],
                 messages: [],
                 chatInput: '',
-                sb: null,
-                publicBooks: [
-                    { title: "Metamorphosis", author: "Franz Kafka", genre: "weird/sad", url: "https://www.gutenberg.org/files/5200/5200-h/5200-h.htm" },
-                    { title: "Art of War", author: "Sun Tzu", genre: "strategy/aura", url: "https://www.gutenberg.org/files/132/132-pdf.pdf" },
-                    { title: "1984", author: "George Orwell", genre: "dystopian/real", url: "https://rauterberg.employee.id.tue.nl/lecturenotes/DDM110/Orwell-1984.pdf" },
-                    { title: "The Great Gatsby", author: "Fitzgerald", genre: "romance/messy", url: "https://www.ibiblio.org/ebooks/Fitzgerald/Gatsby/Gatsby.pdf" }
+                showAdd: false,
+                hotTake: { book: 'everything', review: 'mid' },
+                trending: [
+                    { title: "Metamorphosis", genre: "SAD" },
+                    { title: "The Art of War", genre: "SIGMA" },
+                    { title: "1984", genre: "DYSTOPIAN" },
+                    { title: "No Longer Human", genre: "FEELS" },
+                    { title: "Basic HTML", genre: "NERD" }
                 ],
+                sb: null,
 
                 async init() {
                     const SB_URL = 'https://xeefrgjdopybjfofsnts.supabase.co';
@@ -239,8 +218,11 @@
                             this.sb = window.supabase.createClient(SB_URL, SB_KEY);
                             this.fetchData();
                             setInterval(() => this.fetchData(), 4000);
+                            // Aura Decay Logic (Lose 1 point every 30 seconds for inactivity)
+                            setInterval(() => this.updateAura(-1, 'INACTIVITY DRAIN'), 30000);
                         }
                     }, 500);
+                    this.generateHotTake();
                 },
 
                 async fetchData() {
@@ -257,35 +239,50 @@
                 login() {
                     if (this.username.trim()) {
                         this.isLoggedIn = true;
-                        this.triggerBot(`oh look, @${this.username} joined. slay, i guess. don't make it weird.`);
+                        this.triggerBot(`Logged in: @${this.username}. Aura check complete. Warning: Ur current taste is under investigation.`);
                     }
                 },
 
                 logout() { this.isLoggedIn = false; },
 
+                updateAura(val, reason) {
+                    this.aura += val;
+                    this.auraChange = val;
+                    this.auraStatusMsg = reason;
+                    setTimeout(() => { this.auraChange = 0; this.auraStatusMsg = 'STABLE'; }, 3000);
+                },
+
                 async addBook() {
                     if (!this.newBook.title) return;
-                    await this.sb.from('books').insert([{ 
-                        title: this.newBook.title, 
-                        author: this.newBook.author, 
-                        pdf_url: this.newBook.pdfUrl 
-                    }]);
-                    const t = this.newBook.title;
+                    await this.sb.from('books').insert([{ title: this.newBook.title, author: this.newBook.author, pdf_url: this.newBook.pdfUrl }]);
+                    this.updateAura(50, 'CONTRIBUTOR BONUS');
+                    this.triggerBot(`U actually added "${this.newBook.title}"? Major aura points gained, but ur taste is still questionable.`);
                     this.newBook = { title: '', author: '', pdfUrl: '' };
+                    this.showAdd = false;
                     this.fetchData();
-                    this.triggerBot(`u actually added "${t}"? the main character energy is peaking. i'll put it on the shelf, no cap.`);
                 },
 
                 async borrowBook(book) {
                     await this.sb.from('books').update({ borrowed_by: this.username }).eq('id', book.id);
+                    this.updateAura(20, 'READING BUFF');
                     this.fetchData();
-                    this.triggerBot(`@${this.username} just borrowed "${book.title}". if u don't return it, ur aura is going to zero. fr.`);
+                    this.triggerBot(`Claimed "${book.title}". Don't just let it sit in ur digital drawer, actually read it. fr.`);
                 },
 
                 async returnBook(book) {
                     await this.sb.from('books').update({ borrowed_by: null }).eq('id', book.id);
+                    this.updateAura(30, 'HONESTY BUFF');
                     this.fetchData();
-                    this.triggerBot(`returned "${book.title}". finally. was starting to think u were a gatekeeper.`);
+                    this.triggerBot(`Return processed. Aura +30. See? Being a good person isn't that hard.`);
+                },
+
+                generateHotTake() {
+                    const books = ['Kafka', 'Colleen Hoover', 'Shakespeare', 'Manga', 'Coding Docs', 'Philosophy'];
+                    const takes = ['main character energy', 'totally delulu', 'valid fr fr', 'a huge red flag', 'peaking in high school', 'actually high aura'];
+                    this.hotTake = {
+                        book: books[Math.floor(Math.random() * books.length)],
+                        review: takes[Math.floor(Math.random() * takes.length)]
+                    };
                 },
 
                 async postMessage() {
@@ -296,36 +293,22 @@
                     this.fetchData();
 
                     setTimeout(() => {
-                        // GENRE & HELPFUL LOGIC
-                        if (input.includes('recs') || input.includes('recommend') || input.includes('genre')) {
-                            this.triggerBot("u want a rec? okay, let's see... if ur feeling 'delulu', read Romance. if ur in ur 'villain era', read Philosophy. if u want to be 'shook', read Horror. what's the vibe?");
-                        } else if (input.includes('horror') || input.includes('scary')) {
-                            this.triggerBot("horror? bet. go find 'The Shining' or 'House of Leaves'. don't come crying to me when u can't sleep.");
-                        } else if (input.includes('sad') || input.includes('cry')) {
-                            this.triggerBot("oh, we're in our feels today? read 'A Little Life' or 'Normal People'. it's a total flop for ur mental health but a slay for literature.");
-                        } else if (input.includes('smart') || input.includes('sci-fi')) {
-                            this.triggerBot("sci-fi is for the big brains. check out 'Dune' or 'Project Hail Mary'. very high aura choices.");
-                        } else if (input.includes('help')) {
-                            this.triggerBot("it's not that deep. click CLAIM to take a book. click POST to give one. ask me for RECS if u have zero taste.");
-                        } else if (input.includes('joke')) {
-                            this.triggerBot("why did the book go to the doctor? because it had a broken spine. lol. i'm literally the funniest bot here.");
+                        if (input.includes('hot take') || input.includes('review')) {
+                            this.generateHotTake();
+                            this.triggerBot(`Hot Take: People who read ${this.hotTake.book} are ${this.hotTake.review}. No cap.`);
+                        } else if (input.includes('aura')) {
+                            this.triggerBot(`Ur aura is ${this.aura}. ${this.aura > 1000 ? 'Slay.' : 'Ur falling off, read more.'}`);
+                        } else if (input.includes('recommend') || input.includes('genre')) {
+                            this.triggerBot("Genre Check: If u want AURA, read Strategy. If u want to CRY, read Romance. If u want to be SMART, read Sci-Fi. Choose wisely.");
                         } else {
-                            const sassy = [
-                                "purr. anyway, u gonna read something or just talk?",
-                                "i'm literally an AI and even i have better taste than that sentence.",
-                                "no cap, that's the most mid thing i've heard all day.",
-                                "ur lucky i'm a bot or i'd be rolling my eyes so hard right now.",
-                                "anyway... stream '1984' it's basically a documentary now."
-                            ];
+                            const sassy = ["That message was mid. Try again.", "Purr. Anyway, read a book.", "I'm a bot and even I have better aura than that sentence.", "Moving on..."];
                             this.triggerBot(sassy[Math.floor(Math.random() * sassy.length)]);
                         }
                     }, 800);
                 },
 
                 async triggerBot(text) {
-                    await this.sb.from('messages').insert([{ 
-                        username: 'Librarian Bot', avatar: '🤖', content: text 
-                    }]);
+                    await this.sb.from('messages').insert([{ username: 'Librarian Bot', avatar: '🤖', content: text }]);
                     this.fetchData();
                 }
             }
