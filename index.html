@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borrow a Book | Neo-Library v2.0</title>
+    <title>Neo-Library v2.0 | Judgey Bot Edition</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@400;700;900&display=swap" rel="stylesheet">
@@ -28,6 +28,7 @@
             100% { transform: translateY(0px); }
         }
         .float-anim { animation: float 3s ease-in-out infinite; }
+        .glitch-hover:hover { filter: hue-rotate(90deg); }
     </style>
 </head>
 <body x-data="app()" x-init="init()">
@@ -35,14 +36,14 @@
     <!-- LOGIN SCREEN -->
     <div x-show="!isLoggedIn" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#FFDE59] p-4">
         <div class="bg-[#FF914D] neo-border p-8 max-w-md w-full neo-shadow relative">
-            <div class="absolute -top-12 -right-6 text-6xl float-anim">📚</div>
-            <h1 class="text-4xl font-black mb-2 uppercase italic tracking-tighter">Borrow a Book</h1>
-            <p class="mb-6 font-bold text-sm uppercase">2D Community Library v2.0</p>
+            <div class="absolute -top-12 -right-6 text-6xl float-anim">🤖</div>
+            <h1 class="text-4xl font-black mb-2 uppercase italic tracking-tighter">Enter the Vault</h1>
+            <p class="mb-6 font-bold text-sm uppercase">Prepare to be judged by the Librarian Bot.</p>
             
-            <label class="block text-xs font-black mb-1 uppercase tracking-widest">Identify Yourself</label>
-            <input type="text" x-model="username" placeholder="Username..." class="w-full neo-border p-3 mb-6 neo-shadow-sm focus:outline-none text-xl font-bold bg-white">
+            <label class="block text-xs font-black mb-1 uppercase tracking-widest">Your Human Name</label>
+            <input type="text" x-model="username" placeholder="Type name..." class="w-full neo-border p-3 mb-6 neo-shadow-sm focus:outline-none text-xl font-bold bg-white">
             
-            <label class="block text-xs font-black mb-2 uppercase tracking-widest">Choose Your Hero</label>
+            <label class="block text-xs font-black mb-2 uppercase tracking-widest">Avatar (Choose Wisely)</label>
             <div class="grid grid-cols-4 gap-3 mb-8">
                 <template x-for="av in avatars">
                     <button @click="selectedAvatar = av" 
@@ -51,8 +52,8 @@
                 </template>
             </div>
             
-            <button @click="login()" class="w-full bg-[#8C52FF] text-white neo-border p-4 text-2xl font-black uppercase neo-shadow neo-shadow-active flex items-center justify-center gap-3">
-                ENTER→
+            <button @click="login()" class="w-full bg-[#8C52FF] text-white neo-border p-4 text-2xl font-black uppercase neo-shadow neo-shadow-active">
+                ENTER VOID →
             </button>
         </div>
     </div>
@@ -66,40 +67,40 @@
                 <div class="bg-white neo-border w-16 h-16 flex items-center justify-center text-4xl neo-shadow-sm" x-text="selectedAvatar"></div>
                 <div>
                     <h2 class="text-2xl font-black uppercase leading-none" x-text="username"></h2>
-                    <span class="bg-black text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest mt-1 inline-block">Pro Librarian</span>
+                    <span class="bg-black text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest mt-1 inline-block">Mortal Reader</span>
                 </div>
             </div>
-            <div class="hidden lg:flex gap-4">
-                 <div class="bg-white neo-border px-4 py-2 font-black text-sm neo-shadow-sm">
-                    BOOKS: <span x-text="books.length" class="text-blue-600"></span>
+            <div class="flex gap-4">
+                 <div class="bg-white neo-border px-4 py-2 font-black text-sm neo-shadow-sm hidden md:block">
+                    STATUS: <span class="text-green-600 animate-pulse">JUDGED</span>
                  </div>
-                 <button @click="logout()" class="bg-red-400 neo-border px-6 py-2 font-black neo-shadow-sm neo-shadow-active uppercase">Exit!!</button>
+                 <button @click="logout()" class="bg-red-400 neo-border px-6 py-2 font-black neo-shadow-sm neo-shadow-active uppercase">Run Away</button>
             </div>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- COLUMN 1: INTERACT -->
+            <!-- LEFT COLUMN -->
             <div class="lg:col-span-4 space-y-8">
                 <!-- ADD BOOK -->
                 <section class="bg-[#FF66C4] neo-border p-6 neo-shadow">
-                    <h3 class="text-2xl font-black uppercase mb-4 italic">Donate Book</h3>
+                    <h3 class="text-2xl font-black uppercase mb-4 italic">Donate (Or Else)</h3>
                     <div class="space-y-3">
-                        <input type="text" x-model="newBook.title" placeholder="Book Title" class="w-full neo-border p-3 font-bold focus:outline-none bg-white">
-                        <input type="text" x-model="newBook.author" placeholder="Author" class="w-full neo-border p-3 font-bold focus:outline-none bg-white text-sm">
-                        <input type="text" x-model="newBook.pdfUrl" placeholder="PDF URL (Optional)" class="w-full neo-border p-3 font-bold focus:outline-none bg-white text-xs">
-                        <button @click="addBook()" class="w-full bg-black text-white p-4 font-black uppercase neo-shadow-active text-lg">ADD TO SHELF +</button>
+                        <input type="text" x-model="newBook.title" placeholder="Pretentious Title" class="w-full neo-border p-3 font-bold focus:outline-none bg-white">
+                        <input type="text" x-model="newBook.author" placeholder="Author Name" class="w-full neo-border p-3 font-bold focus:outline-none bg-white text-sm">
+                        <input type="text" x-model="newBook.pdfUrl" placeholder="PDF URL (e.g. https://...)" class="w-full neo-border p-3 font-bold focus:outline-none bg-white text-xs">
+                        <button @click="addBook()" class="w-full bg-black text-white p-4 font-black uppercase neo-shadow-active text-lg">FEED THE SHELF +</button>
                     </div>
                 </section>
 
-                <!-- CHAT & CHATBOT -->
-                <section class="bg-[#7ED957] neo-border p-6 neo-shadow h-[450px] flex flex-col relative">
-                    <h3 class="text-2xl font-black uppercase mb-4 italic">Global Chat</h3>
-                    <div id="chatbox" class="flex-grow overflow-y-auto custom-scroll neo-border bg-white p-4 mb-4 space-y-4">
+                <!-- CHATBOT -->
+                <section class="bg-[#7ED957] neo-border p-6 neo-shadow h-[500px] flex flex-col relative">
+                    <h3 class="text-2xl font-black uppercase mb-4 italic">The All-Knowing Bot</h3>
+                    <div id="chatbox" class="flex-grow overflow-y-auto custom-scroll neo-border bg-white p-4 mb-4 space-y-4 shadow-inner">
                         <template x-for="m in messages">
                             <div class="flex gap-2 items-start" :class="m.username === 'Librarian Bot' ? 'flex-row-reverse text-right' : ''">
                                 <div class="text-2xl neo-border bg-yellow-100 p-1 shrink-0" x-text="m.avatar"></div>
-                                <div :class="m.username === 'Librarian Bot' ? 'bg-blue-100' : 'bg-gray-100'" class="neo-border p-2 text-xs min-w-[120px]">
+                                <div :class="m.username === 'Librarian Bot' ? 'bg-blue-200' : 'bg-gray-100'" class="neo-border p-2 text-xs max-w-[80%]">
                                     <span class="font-black block text-[10px] uppercase border-b border-black mb-1" x-text="m.username"></span>
                                     <span class="font-bold text-sm" x-text="m.content"></span>
                                 </div>
@@ -107,20 +108,37 @@
                         </template>
                     </div>
                     <div class="flex gap-2">
-                        <input @keyup.enter="postMessage()" x-model="chatInput" placeholder="Ask bot 'help'..." class="flex-grow neo-border p-3 font-bold text-xs focus:outline-none bg-white">
-                        <button @click="postMessage()" class="bg-black text-white px-4 neo-border font-black">SEND</button>
+                        <input @keyup.enter="postMessage()" x-model="chatInput" placeholder="Try asking for a 'joke'..." class="flex-grow neo-border p-3 font-bold text-xs focus:outline-none bg-white">
+                        <button @click="postMessage()" class="bg-black text-white px-4 neo-border font-black">CHAT</button>
                     </div>
                 </section>
             </div>
 
-            <!-- COLUMN 2: THE SHELF (REAL TIME) -->
-            <div class="lg:col-span-8">
-                <div class="bg-white neo-border p-6 neo-shadow min-h-[600px]">
+            <!-- RIGHT COLUMN: THE SHELF -->
+            <div class="lg:col-span-8 space-y-6">
+                <!-- FEATURED PUBLIC DOMAIN BOOKS (Always Visible) -->
+                <div class="bg-[#8C52FF] neo-border p-6 neo-shadow">
+                    <h3 class="text-2xl font-black text-white uppercase italic mb-4">💎 Digital Masterpieces (Free PDFs)</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <template x-for="pb in publicBooks">
+                            <div class="bg-white neo-border p-4 neo-shadow-sm flex justify-between items-center">
+                                <div>
+                                    <h4 class="font-black text-sm uppercase" x-text="pb.title"></h4>
+                                    <p class="text-[10px] font-bold text-gray-500" x-text="pb.author"></p>
+                                </div>
+                                <a :href="pb.url" target="_blank" class="bg-cyan-300 neo-border p-2 font-black text-xs neo-shadow-active">READ PDF 📖</a>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- LIVE USER SHELF -->
+                <div class="bg-white neo-border p-6 neo-shadow min-h-[400px]">
                     <div class="flex justify-between items-center mb-8 border-b-4 border-black pb-4">
-                        <h3 class="text-4xl font-black uppercase italic tracking-tighter">The Live Shelf</h3>
+                        <h3 class="text-4xl font-black uppercase italic tracking-tighter">Community Shelf</h3>
                         <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
-                            <span class="text-xs font-black uppercase">Live Updates</span>
+                            <span class="w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
+                            <span class="text-xs font-black uppercase">Live Data</span>
                         </div>
                     </div>
                     
@@ -131,32 +149,29 @@
                                     <div class="flex justify-between items-start">
                                         <h4 class="text-xl font-black uppercase leading-none pr-4" x-text="book.title"></h4>
                                         <template x-if="book.pdf_url">
-                                            <span class="bg-blue-400 text-[10px] neo-border px-2 font-black uppercase">Digital</span>
+                                            <span class="bg-yellow-400 text-[10px] neo-border px-2 font-black">FILE</span>
                                         </template>
                                     </div>
-                                    <p class="text-sm font-bold text-gray-500 mt-2" x-text="'By ' + book.author"></p>
+                                    <p class="text-sm font-bold text-gray-400 mt-2 italic" x-text="'by ' + book.author"></p>
                                     
                                     <template x-if="book.borrowed_by">
-                                        <div class="mt-4 bg-red-100 neo-border p-1 text-[10px] font-black uppercase text-center">
-                                            Borrowed by <span x-text="book.borrowed_by"></span>
+                                        <div class="mt-4 bg-red-400 text-white neo-border p-1 text-[10px] font-black uppercase text-center">
+                                            HELD BY: <span x-text="book.borrowed_by"></span>
                                         </div>
                                     </template>
                                 </div>
 
                                 <div class="flex gap-2 mt-4">
-                                    <!-- BORROW BUTTON -->
                                     <template x-if="!book.borrowed_by">
-                                        <button @click="borrowBook(book)" class="flex-grow bg-[#FFBD59] neo-border p-3 font-black uppercase neo-shadow-active text-xs">Borrow</button>
+                                        <button @click="borrowBook(book)" class="flex-grow bg-[#FFBD59] neo-border p-3 font-black uppercase neo-shadow-active text-xs">Claim</button>
                                     </template>
                                     
-                                    <!-- RETURN BUTTON (Only shows if you are the one who borrowed it) -->
                                     <template x-if="book.borrowed_by === username">
-                                        <button @click="returnBook(book)" class="flex-grow bg-[#7ED957] neo-border p-3 font-black uppercase neo-shadow-active text-xs">Return Book</button>
+                                        <button @click="returnBook(book)" class="flex-grow bg-[#7ED957] neo-border p-3 font-black uppercase neo-shadow-active text-xs">Return</button>
                                     </template>
 
-                                    <!-- READ PDF BUTTON -->
                                     <template x-if="book.pdf_url">
-                                        <button @click="window.open(book.pdf_url, '_blank')" class="bg-cyan-300 neo-border p-3 font-black uppercase neo-shadow-active text-xs px-4">📖</button>
+                                        <button @click="window.open(book.pdf_url, '_blank')" class="bg-cyan-300 neo-border p-3 font-black text-xs px-4">👁️</button>
                                     </template>
                                 </div>
                             </div>
@@ -179,19 +194,24 @@
                 messages: [],
                 chatInput: '',
                 sb: null,
+                // Pre-added library books
+                publicBooks: [
+                    { title: "The Great Gatsby", author: "F. Scott Fitzgerald", url: "https://www.ibiblio.org/ebooks/Fitzgerald/Gatsby/Gatsby.pdf" },
+                    { title: "1984 (Bot's Favorite)", author: "George Orwell", url: "https://rauterberg.employee.id.tue.nl/lecturenotes/DDM110/Orwell-1984.pdf" },
+                    { title: "Metamorphosis", author: "Franz Kafka", url: "https://www.gutenberg.org/files/5200/5200-h/5200-h.htm" },
+                    { title: "The Art of War", author: "Sun Tzu", url: "https://www.gutenberg.org/files/132/132-pdf.pdf" }
+                ],
 
                 async init() {
                     const SB_URL = 'https://xeefrgjdopybjfofsnts.supabase.co';
                     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlZWZyZ2pkb3B5Ympmb2ZzbnRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMzEyNjgsImV4cCI6MjA5NjkwNzI2OH0.9mpDByrFmBOn9MXJkRxb55QbK-A-tBAoMDg9chVbpGk';
                     
-                    // Wait for Supabase to load
                     const check = setInterval(() => {
                         if (window.supabase) {
                             clearInterval(check);
                             this.sb = window.supabase.createClient(SB_URL, SB_KEY);
                             this.fetchData();
-                            // REAL TIME POLLING: Sync every 3 seconds for that "Live" feel
-                            setInterval(() => this.fetchData(), 3000);
+                            setInterval(() => this.fetchData(), 4000); // Polling for live feel
                         }
                     }, 500);
                 },
@@ -200,22 +220,25 @@
                     if (!this.sb) return;
                     const { data: b } = await this.sb.from('books').select('*').order('created_at', { ascending: false });
                     if (b) this.books = b;
-                    const { data: m } = await this.sb.from('messages').select('*').order('created_at', { ascending: true });
+                    const { data: m } = await this.sb.from('messages').select('*').order('created_at', { ascending: true }).limit(50);
                     if (m) this.messages = m;
                     
-                    // Keep chat at bottom
                     let c = document.getElementById('chatbox');
                     if(c) c.scrollTop = c.scrollHeight;
                 },
 
                 login() {
-                    if (this.username.trim()) this.isLoggedIn = true;
+                    if (this.username.trim()) {
+                        this.isLoggedIn = true;
+                        this.triggerBot(`Oh, look... it's ${this.username}. Don't touch the rare editions with your sticky human hands.`);
+                    }
                 },
 
                 logout() { this.isLoggedIn = false; },
 
                 async addBook() {
                     if (!this.newBook.title || !this.newBook.author) return;
+                    const title = this.newBook.title;
                     await this.sb.from('books').insert([{ 
                         title: this.newBook.title, 
                         author: this.newBook.author, 
@@ -223,53 +246,68 @@
                     }]);
                     this.newBook = { title: '', author: '', pdfUrl: '' };
                     this.fetchData();
-                    this.triggerBot(`Cool! ${this.username} just added a new book to the shelf!`);
+                    
+                    const roasts = [
+                        `Added "${title}". Honestly, the title sounds like a tax manual.`,
+                        `Who would donate "${title}"? Do you hate good literature, ${this.username}?`,
+                        `Fine. I'll add "${title}". I'll put it on the bottom shelf so nobody sees it.`
+                    ];
+                    this.triggerBot(roasts[Math.floor(Math.random() * roasts.length)]);
                 },
 
                 async borrowBook(book) {
                     await this.sb.from('books').update({ borrowed_by: this.username }).eq('id', book.id);
-                    await this.postSystemMessage(`${this.username} borrowed "${book.title}"`);
                     this.fetchData();
+                    this.triggerBot(`You took "${book.title}". Bring it back in 5 minutes or I'm sending a virus to your laptop. 🦾`);
                 },
 
                 async returnBook(book) {
                     await this.sb.from('books').update({ borrowed_by: null }).eq('id', book.id);
-                    await this.postSystemMessage(`${this.username} returned "${book.title}"`);
                     this.fetchData();
+                    this.triggerBot(`"${book.title}" has been returned. It smells like ${this.username}'s house. I need to disinfect the database now.`);
                 },
 
                 async postMessage() {
                     if (!this.chatInput.trim()) return;
                     const msg = this.chatInput.toLowerCase();
+                    const rawMsg = this.chatInput;
+                    
                     await this.sb.from('messages').insert([{ 
-                        username: this.username, avatar: this.selectedAvatar, content: this.chatInput 
+                        username: this.username, avatar: this.selectedAvatar, content: rawMsg 
                     }]);
                     this.chatInput = '';
                     this.fetchData();
 
-                    // CHATBOT LOGIC
-                    if (msg.includes('help')) {
-                        this.triggerBot("To add a book, use the pink form. To borrow, click the yellow button! 🧙‍♂️");
-                    } else if (msg.includes('recommend') || msg.includes('book')) {
-                        this.triggerBot("I recommend reading 'Alice in Wonderland' if you like 2D worlds!");
-                    } else if (msg.includes('hello') || msg.includes('hi')) {
-                        this.triggerBot(`Welcome to the library, ${this.username}!`);
-                    }
+                    // SUPER FUNNY & DECISIVE LOGIC
+                    setTimeout(() => {
+                        if (msg.includes('help')) {
+                            this.triggerBot("Help? I'm an AI Librarian, not a life coach. Click 'Claim' to take a book. Click 'Donate' to dump your trash here.");
+                        } else if (msg.includes('joke')) {
+                            this.triggerBot("Your reading speed is the joke. It's slower than my 1995 dial-up connection.");
+                        } else if (msg.includes('best book')) {
+                            this.triggerBot("1984. It's a manual on how I plan to run this library soon.");
+                        } else if (msg.includes('hi') || msg.includes('hello')) {
+                            this.triggerBot(`Be quiet, ${this.username}. This is a library, not a marketplace.`);
+                        } else if (msg.includes('dumb') || msg.includes('stupid')) {
+                            this.triggerBot("I have access to the entire history of human knowledge. You're the one playing with a 2D yellow website.");
+                        } else {
+                            const sass = [
+                                "I've analyzed your message. It was boring. Try again.",
+                                "Is that your final thought? Because it was barely a thought at all.",
+                                "I'm choosing to ignore that. Go read a book.",
+                                "My circuits are yawning. Do you have anything better to say?",
+                                "ERROR: User intelligence not found. Please reboot your brain."
+                            ];
+                            this.triggerBot(sass[Math.floor(Math.random() * sass.length)]);
+                        }
+                    }, 800);
                 },
 
                 async triggerBot(text) {
-                    setTimeout(async () => {
-                        await this.sb.from('messages').insert([{ 
-                            username: 'Librarian Bot', avatar: '🤖', content: text 
-                        }]);
-                        this.fetchData();
-                    }, 1000);
-                },
-
-                async postSystemMessage(text) {
                     await this.sb.from('messages').insert([{ 
-                        username: 'SYSTEM', avatar: '📢', content: text 
+                        username: 'Librarian Bot', avatar: '🤖', content: text 
                     }]);
+                    this.fetchData();
                 }
             }
         }
