@@ -33,7 +33,7 @@
             <p class="text-[10px] font-bold uppercase mb-6 tracking-widest text-pink-600">Identify before the bot roasts you</p>
             <input type="text" x-model="username" placeholder="HANDLE" class="w-full border-4 border-black p-4 mb-4 text-center font-bold text-xl outline-none">
             <div class="grid grid-cols-4 gap-2 mb-8">
-                <template x-for="av in ['🕶️', '💅', '🔥', '💀', '🤡', '👽', '👾', '🍄']">
+                <template x-for="av in ['🕶️', '💅', '🔥', '💀', '🤡', '👽', '👾', '🍄','❤️', '🤗', '😇', '😈']">
                     <button @click="selectedAvatar = av" :class="selectedAvatar === av ? 'bg-pink-500 text-white' : 'bg-white'" class="text-2xl p-2 border-2 border-black" x-text="av"></button>
                 </template>
             </div>
