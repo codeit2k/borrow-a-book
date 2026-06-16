@@ -3,149 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEO-LIBRARY // v5.0 ULTIMATE</title>
+    <title>NEO-LIBRARY // v6.0 COMMUNITY HUB</title>
     
-    <!-- External CSS (Tailwind) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
-    
-    <!-- Alpine.js (Logic Engine) -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
-        body { 
-            font-family: 'Space Grotesk', sans-serif; 
-            background-color: #f0f0f0; 
-            color: #000; 
-        }
-        .neo-border { border: 4px solid black; box-shadow: 10px 10px 0px 0px #000; }
-        .neo-button { border: 3px solid black; box-shadow: 5px 5px 0px 0px #000; cursor: pointer; transition: 0.1s; }
-        .neo-button:active { transform: translate(3px, 3px); box-shadow: 0px 0px 0px 0px #000; }
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #bcff00; color: #000; }
+        .neo-border { border: 4px solid black; box-shadow: 8px 8px 0px 0px #000; }
+        .neo-btn { border: 3px solid black; box-shadow: 4px 4px 0px 0px #000; cursor: pointer; transition: 0.1s; font-weight: 800; text-transform: uppercase; }
+        .neo-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px 0px #000; }
+        .tab-active { background-color: #ff007f !important; color: white !important; }
         
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
-        .bot-avatar { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-10px) rotate(2deg); } 100% { transform: translateY(0px) rotate(0deg); } }
+        .bot-avatar { animation: float 4s ease-in-out infinite; }
         
         .custom-scroll::-webkit-scrollbar { width: 8px; }
         .custom-scroll::-webkit-scrollbar-track { background: #000; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #ff007f; border: 1px solid #000; }
     </style>
 </head>
-<body x-data="app()">
+<body x-data="app()" x-init="init()">
 
-    <!-- LOGIN SCREEN -->
-    <div x-show="!isLoggedIn" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#ff007f] p-4">
+    <!-- LOGIN OVERLAY -->
+    <div x-show="!isLoggedIn" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4">
         <div class="bg-white neo-border p-8 max-w-md w-full text-center">
-            <h1 class="text-6xl font-black italic mb-4">VIBE CHECK</h1>
-            <input type="text" x-model="username" placeholder="USERNAME" class="w-full border-4 border-black p-4 mb-4 text-center font-bold text-xl outline-none">
-            
+            <h1 class="text-5xl font-black italic mb-2">NEO-LIB 6.0</h1>
+            <p class="text-[10px] font-bold uppercase mb-6 tracking-widest text-pink-600">Identify before the bot roasts you</p>
+            <input type="text" x-model="username" placeholder="HANDLE" class="w-full border-4 border-black p-4 mb-4 text-center font-bold text-xl outline-none">
             <div class="grid grid-cols-4 gap-2 mb-8">
                 <template x-for="av in ['🕶️', '💅', '🔥', '💀', '🤡', '👽', '👾', '🍄']">
-                    <button @click="selectedAvatar = av" :class="selectedAvatar === av ? 'bg-black text-white' : 'bg-white'" class="text-2xl p-2 border-2 border-black" x-text="av"></button>
+                    <button @click="selectedAvatar = av" :class="selectedAvatar === av ? 'bg-pink-500 text-white' : 'bg-white'" class="text-2xl p-2 border-2 border-black" x-text="av"></button>
                 </template>
             </div>
-            
-            <button @click="login()" class="w-full bg-[#bcff00] p-6 text-3xl font-black border-4 border-black neo-button">GET IN →</button>
+            <button @click="login()" class="w-full bg-[#bcff00] p-5 text-2xl font-black border-4 border-black neo-btn">ENTER SYSTEM</button>
         </div>
     </div>
 
     <!-- MAIN APP -->
-    <div x-show="isLoggedIn" class="p-4 md:p-10 max-w-[1500px] mx-auto">
+    <div x-show="isLoggedIn" class="p-4 md:p-8 max-w-[1600px] mx-auto">
         
-        <!-- HEADER STATS -->
-        <header class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
-            <div class="md:col-span-4 bg-white neo-border p-6 flex items-center gap-4">
-                <div class="w-16 h-16 bg-[#00f0ff] border-4 border-black flex items-center justify-center text-4xl" x-text="selectedAvatar"></div>
+        <!-- HEADER -->
+        <header class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-10">
+            <div class="md:col-span-4 bg-white neo-border p-4 flex items-center gap-4">
+                <div class="w-16 h-16 bg-[#ff007f] border-4 border-black flex items-center justify-center text-4xl" x-text="selectedAvatar"></div>
                 <div>
-                    <h2 class="text-2xl font-bold" x-text="'@'+username"></h2>
+                    <h2 class="text-2xl font-bold tracking-tight" x-text="'@'+username"></h2>
                     <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-green-500 border-2 border-black animate-pulse"></span>
-                        <span class="text-[10px] font-bold uppercase">System Online</span>
+                        <span :class="isOnline ? 'bg-green-500' : 'bg-red-500'" class="w-3 h-3 rounded-full border-2 border-black animate-pulse"></span>
+                        <span class="text-[10px] font-bold uppercase" x-text="isOnline ? 'System Online' : 'System Offline'"></span>
                     </div>
                 </div>
             </div>
 
-            <div class="md:col-span-4 bg-[#bcff00] neo-border p-6 text-center">
-                <p class="text-xs font-black uppercase opacity-60">Your Aura Points</p>
-                <p class="text-5xl font-black" x-text="aura"></p>
-                <p class="text-[10px] font-bold uppercase mt-1" x-text="auraStatus"></p>
+            <div class="md:col-span-4 bg-black text-white neo-border p-4 text-center relative overflow-hidden">
+                <p class="text-[10px] font-bold uppercase opacity-60">Session Aura</p>
+                <p class="text-5xl font-black text-[#bcff00]" x-text="aura"></p>
+                <p class="text-[9px] font-bold uppercase mt-1" :class="auraDelta > 0 ? 'text-green-400' : 'text-red-400'" x-text="auraStatus"></p>
             </div>
 
-            <div class="md:col-span-4 bg-white neo-border p-6 flex items-center justify-center">
-                <button @click="logout()" class="w-full bg-black text-white p-3 font-bold neo-button uppercase text-sm">Log Out</button>
+            <div class="md:col-span-4 flex gap-4">
+                <div class="flex-grow bg-white neo-border p-4 flex flex-col justify-center text-center">
+                    <p class="text-[10px] font-bold uppercase">Shelf Capacity</p>
+                    <div class="w-full h-3 border-2 border-black bg-gray-200 mt-1"><div class="h-full bg-blue-500" :style="'width:' + (books.length * 5) + '%'"></div></div>
+                </div>
+                <button @click="logout()" class="bg-white neo-border px-4 font-bold text-xs neo-btn">EXIT</button>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- CHAT BOT -->
+            <!-- LEFT: PERSISTENT BOT -->
             <div class="lg:col-span-3">
-                <div class="bg-white neo-border h-[600px] flex flex-col overflow-hidden">
+                <div class="bg-white neo-border h-[650px] flex flex-col overflow-hidden">
                     <div class="bg-black text-white p-4 flex items-center gap-3">
                         <div class="text-3xl bot-avatar">🤖</div>
-                        <p class="font-bold text-sm">LIB-GEN_Z</p>
+                        <div>
+                            <p class="font-bold text-sm">LIB-GEN_Z</p>
+                            <p class="text-[8px] text-[#bcff00] font-bold">STATUS: JUDGING YOU</p>
+                        </div>
                     </div>
                     <div id="chatbox" class="flex-grow p-4 space-y-4 overflow-y-auto bg-gray-50 custom-scroll">
                         <template x-for="m in messages">
                             <div class="flex flex-col" :class="m.user === 'Bot' ? 'items-start' : 'items-end'">
-                                <div :class="m.user === 'Bot' ? 'bg-black text-white' : 'bg-[#00f0ff] border-2 border-black'" class="p-3 text-xs font-bold shadow-[4px_4px_0px_0px_#000] max-w-[85%]">
+                                <span class="text-[8px] font-black uppercase mb-1" x-text="m.user"></span>
+                                <div :class="m.user === 'Bot' ? 'bg-black text-white' : 'bg-[#00f0ff] border-2 border-black'" class="p-3 text-xs font-bold shadow-[4px_4px_0px_0px_#000] max-w-[90%]">
                                     <span x-text="m.text"></span>
                                 </div>
                             </div>
                         </template>
                     </div>
                     <div class="p-4 bg-white border-t-4 border-black flex gap-2">
-                        <input x-model="chatInput" @keyup.enter="sendMessage()" placeholder="Type..." class="flex-grow p-2 border-2 border-black font-bold outline-none">
-                        <button @click="sendMessage()" class="bg-[#ff007f] text-white px-4 font-bold neo-button">GO</button>
+                        <input x-model="chatInput" @keyup.enter="sendMessage()" placeholder="Talk to the bot..." class="flex-grow p-2 border-2 border-black font-bold text-xs outline-none focus:bg-yellow-50">
+                        <button @click="sendMessage()" class="bg-[#ff007f] text-white px-4 neo-btn">GO</button>
                     </div>
                 </div>
             </div>
 
-            <!-- SHELF & PDFS -->
-            <div class="lg:col-span-6 space-y-8">
-                <div class="bg-[#00f0ff] neo-border p-6">
-                    <h3 class="text-2xl font-black uppercase mb-4">Free PDF Vault</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <template x-for="pdf in pdfs">
-                            <div class="bg-white border-2 border-black p-3 flex justify-between items-center">
-                                <span class="font-bold text-xs uppercase" x-text="pdf.t"></span>
-                                <a :href="pdf.u" target="_blank" class="bg-[#bcff00] px-2 py-1 text-[10px] font-black neo-button">OPEN</a>
-                            </div>
-                        </template>
+            <!-- CENTER: TABS (SHELF & INTERACTION) -->
+            <div class="lg:col-span-6">
+                <div class="bg-white neo-border min-h-[650px] flex flex-col">
+                    <div class="grid grid-cols-2 border-b-4 border-black">
+                        <button @click="activeTab = 'shelf'" :class="activeTab === 'shelf' ? 'tab-active' : ''" class="p-4 font-black uppercase text-sm hover:bg-gray-100 transition-colors">📚 Community Shelf</button>
+                        <button @click="activeTab = 'chat'" :class="activeTab === 'chat' ? 'tab-active' : ''" class="p-4 font-black uppercase text-sm hover:bg-gray-100 transition-colors">💬 Discussion Board</button>
                     </div>
-                </div>
 
-                <div class="bg-white neo-border p-6">
-                    <h3 class="text-3xl font-black uppercase mb-6 italic tracking-tighter">Community Shelf</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <template x-for="b in books">
-                            <div class="border-4 border-black p-4 flex flex-col justify-between h-44 shadow-[4px_4px_0px_0px_#000]">
-                                <h4 class="font-black text-lg uppercase leading-tight" x-text="b.title"></h4>
-                                <button @click="borrow(b)" :disabled="b.taken" :class="b.taken ? 'bg-gray-200' : 'bg-[#bcff00]'" class="w-full border-2 border-black p-2 font-black text-[10px] uppercase">
-                                    <span x-text="b.taken ? 'Taken by ' + b.taken : 'Borrow'"></span>
-                                </button>
+                    <!-- TAB: COMMUNITY SHELF -->
+                    <div x-show="activeTab === 'shelf'" class="p-6 space-y-6">
+                        <!-- DONATE SECTION -->
+                        <div class="bg-yellow-100 border-4 border-black border-dashed p-4">
+                            <h3 class="font-black uppercase mb-3">Donate to the Feed</h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                <input x-model="newBook.t" placeholder="TITLE" class="p-2 border-2 border-black font-bold text-xs">
+                                <input x-model="newBook.a" placeholder="AUTHOR" class="p-2 border-2 border-black font-bold text-xs">
+                                <input x-model="newBook.u" placeholder="PDF URL (e.g. Google Drive/Dropbox)" class="col-span-2 p-2 border-2 border-black font-bold text-xs">
+                                <button @click="donateBook()" class="col-span-2 bg-[#bcff00] p-3 neo-btn text-xs">Post PDF to Shelf (+150 Aura)</button>
                             </div>
-                        </template>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <template x-for="b in books">
+                                <div class="bg-white border-4 border-black p-4 flex flex-col justify-between h-48 shadow-[6px_6px_0px_0px_#000]">
+                                    <div>
+                                        <h4 class="font-black text-lg uppercase leading-tight" x-text="b.t"></h4>
+                                        <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase" x-text="'Author: ' + b.a"></p>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button @click="borrow(b)" :disabled="b.taken" :class="b.taken ? 'bg-gray-200' : 'bg-[#bcff00]'" class="flex-grow p-2 text-[10px] neo-btn">
+                                            <span x-text="b.taken ? 'Borrowed by @' + b.taken : 'Borrow'"></span>
+                                        </button>
+                                        <button x-show="b.u" @click="window.open(b.u, '_blank')" class="bg-white border-2 border-black px-4 text-sm neo-btn">📖</button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- TAB: COMMUNITY INTERACTION -->
+                    <div x-show="activeTab === 'chat'" class="p-6 flex flex-col h-full">
+                        <div class="flex-grow space-y-4 mb-4 h-[400px] overflow-y-auto custom-scroll pr-2">
+                            <template x-for="p in communityPosts">
+                                <div class="bg-white border-2 border-black p-3 shadow-[4px_4px_0px_0px_#000]">
+                                    <div class="flex justify-between items-center mb-1 border-b border-black pb-1">
+                                        <span class="text-[9px] font-black uppercase" x-text="'@' + p.user"></span>
+                                        <span class="text-[8px] font-bold text-gray-500" x-text="p.time"></span>
+                                    </div>
+                                    <p class="text-xs font-medium" x-text="p.text"></p>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="flex gap-2">
+                            <input x-model="postInput" @keyup.enter="postToCommunity()" placeholder="Share a thought..." class="flex-grow border-2 border-black p-3 text-xs font-bold outline-none">
+                            <button @click="postToCommunity()" class="bg-black text-white px-6 neo-btn">POST</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- TRENDING TODAY -->
+            <!-- RIGHT: TRENDING & HOT TAKES -->
             <div class="lg:col-span-3 space-y-8">
                 <div class="bg-black text-white neo-border p-6">
-                    <h3 class="text-xl font-black uppercase mb-6 text-[#bcff00]">Trending Top 10</h3>
+                    <h3 class="text-xl font-black uppercase italic mb-6 text-[#bcff00]">Trending Top 10</h3>
                     <div class="space-y-4">
                         <template x-for="(t, i) in trending">
                             <div class="flex items-center gap-3">
-                                <span class="text-xl font-black text-[#ff007f]" x-text="i+1"></span>
-                                <span class="text-[10px] font-bold uppercase truncate" x-text="t"></span>
+                                <span class="text-xl font-black text-[#ff007f]" x-text="String(i+1).padStart(2, '0')"></span>
+                                <div class="overflow-hidden">
+                                    <p class="text-[10px] font-bold uppercase truncate" x-text="t.title"></p>
+                                    <p class="text-[8px] text-gray-500 font-bold uppercase" x-text="t.author"></p>
+                                </div>
                             </div>
                         </template>
                     </div>
                 </div>
 
-                <div class="bg-white neo-border p-6">
-                    <h3 class="text-xs font-black uppercase mb-2">Bot's Hot Take</h3>
-                    <p class="text-xs italic font-bold border-l-4 border-pink-500 pl-2" x-text="hotTake"></p>
+                <div class="bg-white neo-border p-6 relative overflow-hidden">
+                    <div class="absolute -right-2 top-0 text-3xl opacity-20">🔥</div>
+                    <h3 class="text-[10px] font-black uppercase mb-3">Bot's Hot Take</h3>
+                    <p class="text-xs italic font-bold border-l-4 border-[#ff007f] pl-3 leading-relaxed" x-text="hotTake"></p>
+                    <button @click="generateHotTake()" class="mt-4 w-full bg-black text-white p-2 text-[8px] font-black neo-btn">REFRESH ROAST</button>
                 </div>
             </div>
 
@@ -156,69 +193,120 @@
         function app() {
             return {
                 isLoggedIn: false,
+                isOnline: true,
+                activeTab: 'shelf',
                 username: '',
                 selectedAvatar: '🕶️',
                 aura: 1000,
-                auraStatus: 'VIBING',
+                auraDelta: 0,
+                auraStatus: 'Session Stable',
                 chatInput: '',
+                postInput: '',
                 hotTake: "If you read for the 'aesthetic' but don't finish the book, your aura is zero. No cap.",
-                messages: [{user: 'Bot', text: 'Vibe check. Say something or get roasted.'}],
+                messages: [{user: 'Bot', text: 'Archive unlocked. Try not to be mid.'}],
+                communityPosts: [
+                    {user: 'System', text: 'Welcome to the Discussion Board. Be respectful or the bot will delete you.', time: '12:00 PM'},
+                    {user: 'BookWorm', text: 'Does anyone have a PDF for Dune?', time: '1:05 PM'}
+                ],
+                newBook: {t: '', a: '', u: ''},
                 books: [
-                    {title: 'No Longer Human', taken: null},
-                    {title: 'Meditations', taken: null},
-                    {title: 'Atomic Habits', taken: null},
-                    {title: 'Crime & Punishment', taken: null}
+                    {t: 'Metamorphosis', a: 'Franz Kafka', u: 'https://www.gutenberg.org/files/5200/5200-h/5200-h.htm', taken: null},
+                    {t: 'The Art of War', a: 'Sun Tzu', u: 'https://www.gutenberg.org/files/132/132-pdf.pdf', taken: null},
+                    {t: '1984', a: 'George Orwell', u: 'https://rauterberg.employee.id.tue.nl/lecturenotes/DDM110/Orwell-1984.pdf', taken: null}
                 ],
                 trending: [
-                    "Atomic Habits - Clear",
-                    "It Ends With Us - Hoover",
-                    "The Housemaid - McFadden",
-                    "Iron Flame - Yarros",
-                    "1984 - Orwell",
-                    "Yellowface - Kuang",
-                    "Dune - Herbert",
-                    "The Silent Patient",
-                    "Funny Story - Henry",
-                    "Verity - Hoover"
+                    {title: "Atomic Habits", author: "James Clear"},
+                    {title: "It Ends With Us", author: "Colleen Hoover"},
+                    {title: "The Housemaid", author: "Freida McFadden"},
+                    {title: "Iron Flame", author: "Rebecca Yarros"},
+                    {title: "Lessons in Chemistry", author: "Bonnie Garmus"},
+                    {title: "The Silent Patient", author: "Alex Michaelides"},
+                    {title: "Funny Story", author: "Emily Henry"},
+                    {title: "Yellowface", author: "R.F. Kuang"},
+                    {title: "Dune", author: "Frank Herbert"},
+                    {title: "Verity", author: "Colleen Hoover"}
                 ],
-                pdfs: [
-                    {t: 'Gatsby', u: 'https://www.ibiblio.org/ebooks/Fitzgerald/Gatsby/Gatsby.pdf'},
-                    {t: '1984', u: 'https://rauterberg.employee.id.tue.nl/lecturenotes/DDM110/Orwell-1984.pdf'},
-                    {t: 'Kafka', u: 'https://www.gutenberg.org/files/5200/5200-h/5200-h.htm'}
-                ],
+
+                init() {
+                    // Simulating Offline/Online
+                    setInterval(() => { this.isOnline = Math.random() > 0.05; }, 15000);
+                    // Aura Decay Logic
+                    setInterval(() => { if(this.isLoggedIn) this.updateAura(-1, 'Inactivity decay'); }, 20000);
+                },
 
                 login() {
                     if(this.username) {
                         this.isLoggedIn = true;
-                        // Start Aura Decay
-                        setInterval(() => { this.aura -= 1; this.auraStatus = 'Aura Draining (Idle)'; }, 10000);
+                        this.triggerBot(`@${this.username} logged in. Aura check... complete. Ur vibes are acceptable for now.`);
                     }
                 },
+
                 logout() { this.isLoggedIn = false; },
+
+                updateAura(val, reason) {
+                    this.aura += val;
+                    this.auraDelta = val;
+                    this.auraStatus = reason;
+                    setTimeout(() => { this.auraDelta = 0; }, 3000);
+                },
+
+                donateBook() {
+                    if(!this.newBook.t || !this.newBook.a) return;
+                    this.books.unshift({ ...this.newBook, taken: null });
+                    this.updateAura(150, 'Donation Buff! +150');
+                    this.triggerBot(`U actually donated "${this.newBook.t}"? Major aura gained, but ur taste is still suspicious.`);
+                    this.newBook = {t: '', a: '', u: ''};
+                },
+
+                postToCommunity() {
+                    if(!this.postInput) return;
+                    this.communityPosts.unshift({
+                        user: this.username,
+                        text: this.postInput,
+                        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                    });
+                    this.updateAura(20, 'Contribution! +20');
+                    this.postInput = '';
+                },
+
                 borrow(b) {
                     b.taken = this.username;
-                    this.aura += 50;
-                    this.auraStatus = 'Aura Gain: +50!';
-                    this.messages.push({user: 'Bot', text: `You took ${b.title}. Hope ur reading level is higher than ur aura.`});
+                    this.updateAura(50, 'Reading Buff! +50');
+                    this.triggerBot(`@${this.username} just borrowed ${b.t}. Hope ur reading level is higher than ur aura.`);
                 },
+
+                generateHotTake() {
+                    const genres = ["Romance", "Self-Help", "Dark Academia", "Manga", "Sci-Fi", "Classics"];
+                    const roasts = ["is just a socially acceptable way to be delulu.", "doesn't count as a personality trait, sorry.", "is what people read when they want to look smarter than they are.", "is valid, but only if you actually finished the book.", "is high aura behavior, no cap."];
+                    this.hotTake = `${genres[Math.floor(Math.random() * genres.length)]} ${roasts[Math.floor(Math.random() * roasts.length)]}`;
+                },
+
                 sendMessage() {
                     if(!this.chatInput) return;
-                    this.messages.push({user: 'You', text: this.chatInput});
+                    this.messages.push({user: this.username, text: this.chatInput});
                     const input = this.chatInput.toLowerCase();
                     this.chatInput = '';
-                    this.aura += 5;
+                    this.updateAura(5, 'Chat gain');
                     
                     setTimeout(() => {
                         if(input.includes('rec')) {
-                            this.messages.push({user: 'Bot', text: 'If ur feeling delulu, read Romance. If ur a villain, read Strategy.'});
+                            this.triggerBot("Recs? Say less. If u want to cry: Kafka. If u want to be a god: Sun Tzu. If ur delulu: Colleen Hoover.");
                         } else if(input.includes('hi') || input.includes('hello')) {
-                            this.messages.push({user: 'Bot', text: 'Slay. Welcome to the archive. Keep it down.'});
+                            this.triggerBot(`Slay, @${this.username}. Welcome to the library. Don't touch the rare editions.`);
+                        } else if(input.includes('aura')) {
+                            this.triggerBot(`Ur aura is ${this.aura}. ${this.aura > 1050 ? 'Slay.' : 'Ur falling off, read more.'}`);
                         } else {
-                            this.messages.push({user: 'Bot', text: 'That message was mid. Anyway, read a book.'});
+                            this.triggerBot("That message was mid. Anyway, go read something.");
                         }
+                    }, 800);
+                },
+
+                triggerBot(text) {
+                    this.messages.push({user: 'Bot', text: text});
+                    this.$nextTick(() => {
                         const c = document.getElementById('chatbox');
-                        c.scrollTop = c.scrollHeight;
-                    }, 600);
+                        if(c) c.scrollTop = c.scrollHeight;
+                    });
                 }
             }
         }
